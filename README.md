@@ -35,7 +35,7 @@ Configurer les paramètres de recherche dans *main.py*
       # Number of hits per request
       hits_page_size=8
 
-Configurer les paramètres d'accès à Twitter dans *fetch.py*
+Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
 
       # Keys to access the twitter API (see http://apps.twitter.com)
       c_key = ''
@@ -54,7 +54,7 @@ bruts de la recherche
 
 ### Pour l'appli web
 
-Configurer les paramètres d'accès à Twitter dans *fetch.py*
+Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
 
       # Keys to access the twitter API (see http://apps.twitter.com)
       c_key = ''
