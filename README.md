@@ -9,8 +9,8 @@ Python 3.x avec le module *Twitter*, les autres modules sont normalement en stan
 
 ## Format de distribution
 
-Plusieurs fichier Python à éxécuter en ligne de commande. Le résultat de la chaîne est un page HTML. 
-L'intégration web reste à faire (wsgi ? Django ?)
+Plusieurs fichiers Python à éxécuter en ligne de commande. Le résultat de la chaîne est un page HTML. 
+L'intégration web reste à faire (wsgi ? Django ? volunteers wanted)
 
 ## Mode d'emploi
 
