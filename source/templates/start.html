@@ -6,9 +6,16 @@
 
 function validateForm() {
 
+  var w=document.forms["start_form"]["mdp"];
   var x=document.forms["start_form"]["mkw"];
   var y=document.forms["start_form"]["okw"];
   var z=document.forms["start_form"]["hbf"];
+
+  if( (w == null || w.value == '') ) {
+
+    alert("Le mot de passe doit être fourni");
+    return false ;
+  } 
 
   if( (x == null || x.value == '') ) {
 
@@ -55,6 +62,13 @@ requêtes ... merci de ne pas abuser. <BR>
 
   <table>
 
+    
+  <tr>  
+  <td>Mot de passe :</td>
+  <td><input type="passwod" name="mdp"></td>
+  </tr>
+
+    
   <tr>  
   <td>Mots cl&eacute; obligatoires :</td>
   <td><input type="text" name="mkw"></td>

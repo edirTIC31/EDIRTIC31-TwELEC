@@ -45,8 +45,16 @@ def TwELEC():
     # Fetch form values
     # and replace the default values
     if request.method == 'POST':
+
         mandatory_keywords=request.form['mkw'].split(" ")
 
+        try:
+           passd=request.form['mdp']
+           if passd != "password":
+              return(render_template("error.html",cause="Echec authentification"))
+        except KeyError:
+              return(render_template("error.html",cause="Echec authentification"))
+        
         try:
            optional_keywords=request.form['okw'].split(" ")
         except KeyError:
@@ -64,7 +72,7 @@ def TwELEC():
         except KeyError:
             hours_before=-1
     else:
-        return(render_template("error.html"))
+        return(render_template("error.html",cause="Wrong method"))
         
     createDB.createDB()
     fetchTweets.fetchTweets(session_name,
