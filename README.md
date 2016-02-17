@@ -63,3 +63,4 @@ Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
       a_secret = ''
     
 Pour tester en local : <code>python3 mainWeb.py</code> en utilisant le serveur web intégré de Flask
+L'URL '/' est routée sur la page d'entrée.
