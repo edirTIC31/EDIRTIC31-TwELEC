@@ -9,7 +9,7 @@ Python 3.x avec le module *Twitter* et *Flask*, les autres modules sont normalem
 
 ## Format de distribution
 
-Plusieurs fichiers Python à éxécuter soit en ligne de commande. Le résultat de la chaîne est un page HTML, soit 
+Plusieurs fichiers Python à éxécuter soit en ligne de commande soit 
 en application web
 
 ## Mode d'emploi
