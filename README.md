@@ -7,7 +7,7 @@ TwELEC est un outil (actuellement prototype) de recherche de fils twitter par ra
 
 Python 3.x avec le module *Twitter*, les autres modules sont normalement en standard avec Python 3.x (*sqlite3*,*json*,...)
 
-## Format de distribtion
+## Format de distribution
 
 Plusieurs fichier Python à éxécuter en ligne de commande. Le résultat de la chaîne est un page HTML. 
 L'intégration web reste à faire (wsgi ? Django ?)
