@@ -64,3 +64,5 @@ Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
     
 Pour tester en local : <code>python3 mainWeb.py</code> en utilisant le serveur web intégré de Flask
 L'URL '/' est routée sur la page d'entrée.
+
+Enfin, pour l'explication de l'intégration entre Flask, *mod_wsgi* et Apache2, c'est ici : http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
