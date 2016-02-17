@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>TWElec, l'ELEC par Twitter</title>
+
+<script>
+
+function validateForm() {
+
+  var x=document.forms["start_form"]["mkw"];
+  var y=document.forms["start_form"]["okw"];
+  var z=document.forms["start_form"]["hbf"];
+
+  if( (x == null || x.value == '') ) {
+
+    alert("Au moins un mot clé obligatoire doit être fourni");
+    return false ;
+  } else {
+    x.value = x.value.replace(/\s{2,}/g, ' ');
+  }
+
+  if( y != null && y.value !='' )
+    y.value = y.value.replace(/\s{2,}/g, ' ');
+
+  if( z != null && z.value !='' ) {
+    z.value = z.value.replace(/\s{2,}/g, ' ');
+
+    if( z.value != -1 && (z.value <0 || z.value > 168)) {
+
+       alert("Le nombre d'heures doit être compris entre 0 et 168 h ou égal a -1");
+       return false ;
+    }
+  }
+
+  return true;
+
+}
+</script>
+
+</head>
+
+<body>
+
+<H1>TwELEC, l'ELEC en twittant</H1>
+
+Ce service est <em>exp&eacute;rimental</em>. Merci de <A
+HREF="mailto:laurent.franck@croix-rouge.fr">m'envoyer un mail</A> en
+cas de probl&egrave;me.<BR>
+<BR>
+Twitter limite le nombre de recherches &agrave; 180/15 minutes. Une
+utilisation de TwELEC peut g&eacute;n&eacute;rer une dizaine de
+requêtes ... merci de ne pas abuser. <BR>
+<BR>
+
+<form name="start_form" action="/fetch" method="post">
+
+  <table>
+
+  <tr>  
+  <td>Mots cl&eacute; obligatoires :</td>
+  <td><input type="text" name="mkw"></td>
+  </tr>
+
+  <tr>
+  <td>Mots cl&eacute; optionnels :</rd>
+  <td><input type="text" name="okw"></td>
+  </tr>
+
+  <tr>
+  <td>Nombre d'heures &agrave; remonter dans le pass&eacute; :</td>
+  <td><input type="text" name="hbf" value=3> (-1 pour ignorer sinon entre 0 et
+  168 inclus)</td>
+  </tr>
+
+  <tr>
+  <td colspan=2 align=center><input type="submit" value="envoyer" onClick="return validateForm();"></td>
+  </tr>
+  </table>  
+</form>
+
+<hr>
+<!-- hhmts start -->Last modified: Wed Feb 17 16:35:14 CET 2016 <!-- hhmts end -->
+</body> </html>
