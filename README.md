@@ -14,9 +14,9 @@ L'intégration web reste à faire (wsgi ? Django ? volunteers wanted)
 
 ## Mode d'emploi
 
-> Créer la DB : <code>python3 createDB.py</code>
+Créer la DB : <code>python3 createDB.py</code>, ce script va créer les tables et si le fichier DB n'existe pas, il est créé dans la foulée
 
-> Configurer les paramètres de recherche dans *fetch.py*
+Configurer les paramètres de recherche dans *fetch.py*
 
       # Keys to access the twitter API (see http://apps.twitter.com)
       c_key = ''
@@ -52,16 +52,16 @@ L'intégration web reste à faire (wsgi ? Django ? volunteers wanted)
 
       #####################################################
 
-> Peupler la base de données avec les résultats de recherche Twitter
+Peupler la base de données avec les résultats de recherche Twitter
     <code>python3 fetch.py</code>
     
-> Faire un scoring des résultats
+Faire un scoring des résultats
     <code>python3 process.py</code>
     
-> Construire une page HTML avec les résultats
+Construire une page HTML avec les résultats
     <code>python3 displayToHtml.py > page.html</code>
     
-> *createDB.py* permet de re-créer la DB from scratch et *cleanKept.py*
-> permet de ré-itérer la phase *process.py* sans perdre les résultats
-> bruts de la recherche
+*createDB.py* permet de re-créer la DB from scratch et *cleanKept.py*
+permet de ré-itérer la phase *process.py* sans perdre les résultats
+bruts de la recherche
     
