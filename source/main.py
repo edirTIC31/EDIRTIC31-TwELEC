@@ -29,10 +29,22 @@ hits_page_size=8
 # next multiple of hits_page_size
 max_search_hits=35
 
+
+# Keys to access the twitter API
+c_key = ''
+c_secret = ''
+a_token = ''
+a_secret = ''
+
+
 #####################################################
 
 createDB.createDB()
-fetchTweets.fetchTweets(session_name,
+fetchTweets.fetchTweets(a_token,
+                        a_secret,
+                        c_key,
+                        c_secret,
+                        session_name,
                         mandatory_keywords,
                         optional_keywords,
                         hours_before,

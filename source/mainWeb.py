@@ -33,6 +33,14 @@ max_search_hits=35
 # Session password
 s_password="password"
 
+
+# Keys to access the twitter API
+c_key = ''
+c_secret = ''
+a_token = ''
+a_secret = ''
+
+
 #####################################################
 
 
@@ -78,13 +86,17 @@ def TwELEC():
         return(render_template("error.html",cause="Wrong method"))
         
     createDB.createDB()
-    fetchTweets.fetchTweets(session_name,
-                        mandatory_keywords,
-                        optional_keywords,
-                        hours_before,
-                        language_string,
-                        hits_page_size,
-                        max_search_hits)
+    fetchTweets.fetchTweets(a_token,
+                            a_secret,
+                            c_key,
+                            c_secret,
+                            session_name,
+                            mandatory_keywords,
+                            optional_keywords,
+                            hours_before,
+                            language_string,
+                            hits_page_size,
+                            max_search_hits)
     processTweets.processTweets()
     return(displayToStr.displayToStr())
 

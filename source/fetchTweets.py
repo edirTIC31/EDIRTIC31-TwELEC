@@ -5,12 +5,6 @@ from datetime import timedelta
 import sqlite3 as lite
 import sys
 
-# Keys to access the twitter API
-c_key = ''
-c_secret = ''
-a_token = ''
-a_secret = ''
-
 
 #####################################################
 
@@ -45,7 +39,11 @@ def buildSince(h_bf):
 
 #####################################################
 
-def fetchTweets(session_name,
+def fetchTweets(a_token,
+                a_secret,
+                c_key,
+                c_secret,
+                session_name,
                 mandatory_keywords,
                 optional_keywords,
                 hours_before,
