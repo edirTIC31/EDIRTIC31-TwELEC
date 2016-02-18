@@ -39,5 +39,9 @@ Pour le moment, le scoring est presque trivial. On peut envisager imaginer des v
   * Bonus si le tweet contient de l'information de géolocalisation (et s'il avait déjà un bon score précédemment)
   * Bonus en fonction du nombre de mots à fort contenu sémantique : on retire tous les articles, verbes auxiliaires, et
   pourquoi pas des termes *blacklistés* et on "pèse" le tweet
-  * Feeback de l'utilisateur : celui-ci va épingler les tweets qu'il juge les plus intéressants et en fonction du 
-  contenu des tweets, on modifie les règles de scoring voire les termes de recherche
+
+Ce scoring tel qu'il est implanté n'est qu'une première phase d'un algorithme recherche plus évolué qui se déroulerait de la manière suivante :
+* Première étape de scoring à partir de mots clés (ce qui est implanté actuellement)
+* Feeback de l'utilisateur : celui-ci va épingler les tweets qu'il juge les plus intéressants et éventuellement supprimer ceux qui ne sont pas intéressants
+* En fonction du contenu des tweets jugés intéressants, on modifie les règles de scoring; voire les termes de recherche (en prenant en compte les hashtags présents dans les tweets prometteurs) et on relance une recherche
+* Pour une information en temps réel, en plus de la recherche, on peut créer une stream qui filtre les tweets en fonction des résultats des étapes précédentes. 
