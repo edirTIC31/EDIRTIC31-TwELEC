@@ -16,7 +16,8 @@ en application web
 
 ### Pour la ligne de commande
 
-Configurer les paramètres de recherche dans *main.py*
+Configurer les paramètres de recherche dans *main.py* ainsi que les 
+droits d'accès pour l'API Twitter
 
       session_name="test session"
 
@@ -35,8 +36,6 @@ Configurer les paramètres de recherche dans *main.py*
       # Number of hits per request
       hits_page_size=8
 
-Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
-
       # Keys to access the twitter API (see http://apps.twitter.com)
       c_key = ''
       c_secret = ''
@@ -54,14 +53,18 @@ bruts de la recherche
 
 ### Pour l'appli web
 
-Configurer les paramètres d'accès à Twitter dans *fetchTweets.py*
+Configurer le mot de passe de session et les droits d'accès à Twitter dans *mainWeb.py*
 
-      # Keys to access the twitter API (see http://apps.twitter.com)
+      # Session password
+      s_password="password"
+
+      # Keys to access the twitter API
       c_key = ''
       c_secret = ''
       a_token = ''
       a_secret = ''
     
+
 Pour tester en local : <code>python3 mainWeb.py</code> en utilisant le serveur web intégré de Flask
 L'URL '/' est routée sur la page d'entrée.
 
