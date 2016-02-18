@@ -5,6 +5,8 @@ from datetime import *
 import pytz
 import math
 
+import twelec_globals
+
 ############################################################################## 
 
 # Session name
@@ -98,7 +100,8 @@ def processTweets() :
 
         cur_in=con.cursor()
         cur_out=con.cursor()
-
+        cur_update=con.cursor()
+        
         # Retrieve the session id
         cur_in.execute("SELECT rowid,* FROM Sessions WHERE Name=?",(session_name,))
 
@@ -109,12 +112,13 @@ def processTweets() :
 
         session=row
 
-        # Retrieve all tweets related to that session
-        cur_in.execute("SELECT Json FROM FetchedTweets WHERE Session=?",(session[0],))
+        # Retrieve all tweets related to that session and that are unprocessed
+        cur_in.execute("SELECT TwId,Json FROM FetchedTweets WHERE Session=? and State=?",(session[0],twelec_globals.tweet_states['unprocessed']))
 
         row=cur_in.fetchone()
         while row != None:
-            score=scoreTweet(json.loads(row[0]),session)
-            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session[0],row[0],score))
+            score=scoreTweet(json.loads(row[1]),session)
+            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?,?)",(session[0],row[0],row[1],score))
+            cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed'],row[0]))
             row=cur_in.fetchone()
                 

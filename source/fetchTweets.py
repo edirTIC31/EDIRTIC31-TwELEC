@@ -104,6 +104,7 @@ def fetchTweets(a_token,
       
             # add each tweet to the DB
             for status in result['statuses']:
+                # Id the tweet already exists, this part is ignored
                 cur.execute("INSERT INTO FetchedTweets VALUES(?,?,?,?)",
                             (session_id,
                              status['id'],
