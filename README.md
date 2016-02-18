@@ -5,7 +5,7 @@ TwELEC est un outil (actuellement prototype) de recherche de fils twitter par ra
 
 ## Pré-requis
 
-Python 3.x avec le module *Twitter* et *Flask*, les autres modules sont normalement en standard avec Python 3.x (*sqlite3*,*json*,...)
+Python 3.x avec le module *Twitter*, *Flask* et *pytz*, les autres modules sont normalement en standard avec Python 3.x (*sqlite3*,*json*,...)
 
 ## Format de distribution
 
