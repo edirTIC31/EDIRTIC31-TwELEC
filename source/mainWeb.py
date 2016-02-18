@@ -82,6 +82,19 @@ def TwELEC():
                     hours_before=-1
         except KeyError:
             hours_before=-1
+
+        try:
+            max_search_hits=request.form['shts']
+            if max_search_hits == '':
+                max_search_hits=35
+            else:
+                try:
+                    max_search_hits=int(max_search_hits)
+                except ValueError:
+                    max_search_hits=35
+        except KeyError:
+            max_search_hits=35
+            
     else:
         return(render_template("error.html",cause="Wrong method"))
         

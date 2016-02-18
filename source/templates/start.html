@@ -6,6 +6,7 @@
 
 function validateForm() {
 
+  var v=document.forms["start_form"]["shts"];
   var w=document.forms["start_form"]["mdp"];
   var x=document.forms["start_form"]["mkw"];
   var y=document.forms["start_form"]["okw"];
@@ -33,10 +34,21 @@ function validateForm() {
 
     if( z.value != -1 && (z.value <0 || z.value > 168)) {
 
-       alert("Le nombre d'heures doit être compris entre 0 et 168 h ou égal a -1");
+       alert("Le nombre d'heures doit être compris entre 0 et 168 h ou égal à -1");
        return false ;
     }
   }
+
+  if( v != null && v.value !='' ) {
+    v.value = v.value.replace(/\s{2,}/g, ' ');
+
+    if( (v.value <20 || v.value > 200) ) {
+
+       alert("Le nombre de tweets à trouver doit être compris entre 20 et 200");
+       return false ;
+    }
+  }
+
 
   return true;
 
@@ -86,11 +98,17 @@ requêtes ... merci de ne pas abuser. <BR>
   </tr>
 
   <tr>
+  <td>Nombre de Tweets &agrave; trouver :</td>
+  <td><input type="text" name="shts" value=35> (entre 20 et
+  200 inclus)</td>
+  </tr>
+  
+  <tr>
   <td colspan=2 align=center><input type="submit" value="envoyer" onClick="return validateForm();"></td>
   </tr>
   </table>  
 </form>
 
 <hr>
-<!-- hhmts start -->Last modified: Wed Feb 17 16:35:14 CET 2016 <!-- hhmts end -->
+<!-- hhmts start -->Last modified: Thu Feb 18 09:00:00 CET 2016 <!-- hhmts end -->
 </body> </html>
