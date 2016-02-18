@@ -1,6 +1,9 @@
 import json
 import sqlite3 as lite
 import sys
+from datetime import *
+import pytz
+import math
 
 ############################################################################## 
 
@@ -15,6 +18,12 @@ bonus_optional_keyword=5
 
 # Malus score when no photo is present
 malus_no_photo=10
+
+# Max malus for age
+malus_max_age=30
+
+# Age malus "steepness" [5,10]
+malus_age_steepness=5
 
 ##############################################################################
 
@@ -53,6 +62,33 @@ def scoreTweet(tweet,session):
     # Improve score by number of retweets
     score=score+int(tweet['retweet_count'])
                 
+
+    # Compute age of the tweet
+    try:
+        birth_date=datetime.strptime(tweet['created_at'],"%a %b %d %H:%M:%S %z %Y")
+    except ValueError:
+        birth_date=datetime.today()
+        
+    # Make the today date take into account localization
+    # (see the discussion about aware and naive date in the datetime module)
+    now=datetime.today()
+    now = pytz.utc.localize(now)
+    
+    delta=now-birth_date
+    # Compute the age in fractional hours
+    delta_hours=delta.days*24+(delta.seconds/3600)
+
+    # Get the session "past depth"
+    max_hours=session[5]
+    if max_hours==-1:
+        max_hours=360
+
+    # Compute the score malus according to age, using an exp function
+    # with a parametrized steepness (the lower the steepness, the later the curve knee)
+    malus_delta=(math.exp((delta_hours/max_hours)*malus_age_steepness)/math.exp(malus_age_steepness))*malus_max_age
+    
+    score=score-int(malus_delta)
+    
     return(score)  
 
 ############################################################################## 
