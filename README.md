@@ -1,7 +1,10 @@
 # EDIRTIC31-TwELEC
 Projet TwELEC (ELEC par Twitter) de l'EDIR TIC 31
 
-TwELEC est un outil (actuellement prototype) de recherche de fils twitter par rapport à un évènement (accident, catastrophe, ...)
+TwELEC est un outil (actuellement un prototype) de recherche de fils twitter par rapport à un évènement (accident, catastrophe, ...).
+
+Le principe est simple : on fourni des mots clés (ex: "Bordeaux" et "inondation") et TwELEC fait une recherche des tweets
+contenant ces termes. Ensuite, il va appliquer un algorithme de scoring (cf [l'explication](./source/scoring.md) dans le répetoire source) pour classer les tweets par ordre d'importance. Et enfin, il affiche le résultat.
 
 ## Pré-requis
 
