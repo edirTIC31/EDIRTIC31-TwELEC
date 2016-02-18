@@ -36,6 +36,11 @@ droits d'accès pour l'API Twitter
       # Number of hits per request
       hits_page_size=8
 
+      # Maximum number of search hits
+      # may be more depending on
+      # next multiple of hits_page_size
+      max_search_hits=35
+
       # Keys to access the twitter API (see http://apps.twitter.com)
       c_key = ''
       c_secret = ''
