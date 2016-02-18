@@ -30,6 +30,9 @@ hits_page_size=8
 # next multiple of hits_page_size
 max_search_hits=35
 
+# Session password
+s_password="password"
+
 #####################################################
 
 
@@ -50,7 +53,7 @@ def TwELEC():
 
         try:
            passd=request.form['mdp']
-           if passd != "password":
+           if passd != s_password:
               return(render_template("error.html",cause="Echec authentification"))
         except KeyError:
               return(render_template("error.html",cause="Echec authentification"))
