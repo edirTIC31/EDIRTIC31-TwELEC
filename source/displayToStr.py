@@ -34,7 +34,7 @@ def strTrailer() :
         </html>")
         
         
-def strTweet(score,tweet):
+def strTweet(id,tweet,score):
     output=io.StringIO()
     output.write("<tr>")
     
@@ -100,12 +100,12 @@ def displayToStr():
         output=output+strHeader(row)
 
         # Retrieve all tweets related to that session
-        cur.execute("SELECT Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
+        cur.execute("SELECT TwId, Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
 
         row=cur.fetchone()
         while row != None:
-            if row[1]!=0 or keep_zero_score:
-                output=output+strTweet(row[1],json.loads(row[0]))
+            if row[2]!=0 or keep_zero_score:
+                output=output+strTweet(row[0],json.loads(row[1]),row[2])
             row=cur.fetchone()
                     
         output=output+strTrailer()

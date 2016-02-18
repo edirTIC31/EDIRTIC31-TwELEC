@@ -34,7 +34,7 @@ def printTrailer() :
         </html>")
         
         
-def printTweet(score,tweet):
+def printTweet(id,tweet,score):
     print("<tr>")
     
     # Print score
@@ -97,12 +97,12 @@ def displayToHTML():
         printHeader(row)
 
         # Retrieve all tweets related to that session
-        cur.execute("SELECT Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
+        cur.execute("SELECT TwId,Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
 
         row=cur.fetchone()
         while row != None:
-            if row[1]!=0 or keep_zero_score:
-                printTweet(row[1],json.loads(row[0]))
+            if row[2]!=0 or keep_zero_score:
+                printTweet(row[0],json.loads(row[1]),row[2])
             row=cur.fetchone()
                     
         printTrailer()

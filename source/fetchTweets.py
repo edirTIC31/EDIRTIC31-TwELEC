@@ -5,6 +5,7 @@ from datetime import timedelta
 import sqlite3 as lite
 import sys
 
+import twelec_globals
 
 #####################################################
 
@@ -17,7 +18,7 @@ def buildQuery(m_kw):
     # Add all mandatory keywords 
     for kw in m_kw[1:]:
       q_string=q_string+" "+kw
-   
+
     return q_string
 
 def buildSince(h_bf):
@@ -50,7 +51,7 @@ def fetchTweets(a_token,
                 language_string,
                 hits_page_size,
                 max_search_hits):
-      
+
     #Setting up access to the Twitter API
     session_auth=OAuth(a_token,a_secret, c_key, c_secret)
     session=Twitter(auth=session_auth)
@@ -65,12 +66,13 @@ def fetchTweets(a_token,
         cur=con.cursor()
 
     # Create a new session
-    cur.execute("INSERT INTO Sessions VALUES(?,0,?,?,?,?)",
+    cur.execute("INSERT INTO Sessions VALUES(?,?,?,?,?,?)",
                 (session_name,
-                json.dumps(mandatory_keywords),
-                json.dumps(optional_keywords),
-                hours_before,
-                language_string))
+                 twelec_globals.session_states['running'],
+                 json.dumps(mandatory_keywords),
+                 json.dumps(optional_keywords),
+                 hours_before,
+                 language_string))
 
     # Get the ID of the session added as it
     # will be used later for adding tweets
@@ -84,7 +86,7 @@ def fetchTweets(a_token,
     # Build the query string for the twitter search API
     query_string=buildQuery(mandatory_keywords)+" "+buildSince(hours_before)
         
-
+    
     # Start filling the DB with tweets 
     early_finish=False
     while (search_hits < max_search_hits) and not early_finish:
@@ -102,9 +104,11 @@ def fetchTweets(a_token,
       
             # add each tweet to the DB
             for status in result['statuses']:
-                cur.execute("INSERT INTO FetchedTweets VALUES(?,?)",
+                cur.execute("INSERT INTO FetchedTweets VALUES(?,?,?,?)",
                             (session_id,
-                            json.dumps(status)))
+                             status['id'],
+                             json.dumps(status),
+                             twelec_globals.tweet_states['unprocessed']))
 
             # Get max_id from search_metadata: next_results:
             # Example : "next_results": "?max_id=697099148768763903&q=inondation%          # 20AND%20 ...."

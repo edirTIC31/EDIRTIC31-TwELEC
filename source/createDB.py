@@ -1,5 +1,6 @@
 import sqlite3 as lite
 import sys
+import twelec_globals
 
 def createDB():
     con = None
@@ -14,11 +15,11 @@ def createDB():
   
         # Create the fetched tweets table
         cur.execute("DROP TABLE IF EXISTS FetchedTweets")
-        cur.execute("CREATE TABLE FetchedTweets(Session INT, Json TEXT)")
+        cur.execute("CREATE TABLE FetchedTweets(Session INT, TwID INT, Json TEXT, State INT)")
 
         # Create the kept tweets table
         cur.execute("DROP TABLE IF EXISTS KeptTweets")
-        cur.execute("CREATE TABLE KeptTweets(Session INT, Json TEXT, Score INT)")
+        cur.execute("CREATE TABLE KeptTweets(Session INT, TwID INT, Json TEXT, Score INT)")
 
   
     if con:
