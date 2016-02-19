@@ -19,7 +19,7 @@ Plusieurs fichiers Python à éxécuter en application web (Flask)
 ## Mode d'emploi
 
 
-Configurer le mot de passe de session et les droits d'accès à Twitter dans *mainWeb.py*
+Configurer le mot de passe de session et les droits d'accès à Twitter dans *twelec_globals.py*
 
       # Session password
       s_password="password"
