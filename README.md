@@ -38,9 +38,7 @@ Enfin, pour l'explication de l'intégration entre Flask, *mod_wsgi* et Apache2, 
 
 ## Les évolutions prévues du code 
 
-  * Retrait de toute la partie "ligne de commande"
-  * Nettoyage et rationalisation de la structure du code (objets ?)
+
   * Gestion des erreurs
-  * Création d'un module pour la gestion des sessions (création, ...)
   * Evolution de la page d'entrée HTML avec (a) création d'une nouvelle session, (b) ouverture d'une session existante et (c) admin
   * Implantation du feedback sur la recherche de tweets
