@@ -106,10 +106,6 @@ def processTweets(session_id) :
         cur_in.execute("SELECT rowid,* FROM Sessions WHERE rowid=?",(session_id,))
 
         row=cur_in.fetchone()
-        if row == None:
-            print("No Such session as ",repr(session_id))
-            sys.exit(1)
-
         session=row
 
         # Retrieve all tweets related to that session and that are unprocessed
