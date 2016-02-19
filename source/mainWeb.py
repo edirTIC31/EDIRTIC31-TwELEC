@@ -68,11 +68,11 @@ def TwELEC():
             max_search_hits=35
             
     else:
-        return(render_template("error.html",cause="Wrong method"))
+        return(render_template("error.html",cause="Erreur interne envoi formulaire"))
 
     # Check whether request contrains too many operators
     if not validateSearch(mandatory_keywords):
-        return(render_template("error.html",cause="Too many keywords for the Twitter API, up to 9 allowed"))
+        return(render_template("error.html",cause="Trop de mots clés, maximum 9 autorisés"))
 
 
     createDB.createDB()
@@ -83,7 +83,7 @@ def TwELEC():
                             twelec_globals.language_string,
                             max_search_hits)
     if session_id==-1 :
-        return(render_template("error.html",cause="Database error (session creation)"))        
+        return(render_template("error.html",cause="Erreur de base de données (création de session)"))        
     
     fetchTweets.fetchTweets(twelec_globals.a_token,
                             twelec_globals.a_secret,
