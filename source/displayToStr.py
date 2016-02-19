@@ -3,13 +3,7 @@ import sqlite3 as lite
 import sys
 import cgi
 import io
-############################################
-
-# Session name
-session_name="test session"
-
-# Keep tweets with a zero score
-keep_zero_score = False
+import twelec_globals
 
 ############################################
 
@@ -21,7 +15,7 @@ def strHeader(session) :
     <head>\
     <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\
     <title>Tweet results</title>"+
-    "<H1>Résultats</H1>Recherche des mots-clé "+repr(session[3])+" et "+repr(session[4])+" depuis "+str(session[5])+" heures<BR><BR>"+
+    "<H1>Résultats</H1>Recherche des mots-clé "+repr(session[2])+" et "+repr(session[3])+" depuis "+str(session[4])+" heures<BR><BR>"+
     "</head>\
     <body>\
     <table style=\"width:100%\" border=1>\
@@ -80,21 +74,19 @@ def strTweet(id,tweet,score):
   
 ############################################
     
-def displayToStr():
+def displayToStr(session_id):
     with lite.connect("twitter.db") as con:
 
         output=""
         cur=con.cursor()
 
         # Retrieve the session id
-        cur.execute("SELECT rowid,* FROM Sessions WHERE Name=?",(session_name,))
+        cur.execute("SELECT * FROM Sessions WHERE rowid=?",(session_id,))
 
         row=cur.fetchone()
         if row == None:
-            print("No Such session as %s",session_name)
+            print("No Such session as %s",session_id)
             sys.exit(1)
-
-        session_id=row[0]
         
         # Print HTML headers
         output=output+strHeader(row)
@@ -104,7 +96,7 @@ def displayToStr():
 
         row=cur.fetchone()
         while row != None:
-            if row[2]!=0 or keep_zero_score:
+            if row[2]!=0 or twelec_globals.keep_zero_score:
                 output=output+strTweet(row[0],json.loads(row[1]),row[2])
             row=cur.fetchone()
                     

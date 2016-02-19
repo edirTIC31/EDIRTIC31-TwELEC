@@ -2,48 +2,20 @@ import createDB
 import fetchTweets
 import processTweets
 import displayToStr
+import sessions
+import twelec_globals
 
 from flask import Flask, render_template, request
 
 #####################################################
 
-# Session name
-session_name="test session"
 
-# Mandatory keywords
-mandatory_keywords=["inondation"]
-
-# Optional keywords
-optional_keywords=["urgence"]
-
-# Number of hours to look up before now (< 168h)
-hours_before=100
-
-# Language to look for in the tweets
-language_string="fr"
-
-# Number of hits per request
-hits_page_size=8
-
-# Maximum number of search hits
-# may be more depending on
-# next multiple of hits_page_size
-max_search_hits=35
-
-# Session password
-s_password="password"
-
-
-# Keys to access the twitter API
-c_key = ''
-c_secret = ''
-a_token = ''
-a_secret = ''
-
+def validateSearch(m_kw) :
+    return(len(m_kw)<=9)
 
 #####################################################
 
-
+    
 app = Flask(__name__)
 
 @app.route('/')
@@ -61,7 +33,7 @@ def TwELEC():
 
         try:
            passd=request.form['mdp']
-           if passd != s_password:
+           if passd != twelec_globals.session_password:
               return(render_template("error.html",cause="Echec authentification"))
         except KeyError:
               return(render_template("error.html",cause="Echec authentification"))
@@ -97,21 +69,31 @@ def TwELEC():
             
     else:
         return(render_template("error.html",cause="Wrong method"))
-        
+
+    # Check whether request contrains too many operators
+    if not validateSearch(mandatory_keywords):
+        return(render_template("error.html",cause="Too many keywords for the Twitter API, up to 9 allowed"))
+
+
     createDB.createDB()
-    fetchTweets.fetchTweets(a_token,
-                            a_secret,
-                            c_key,
-                            c_secret,
-                            session_name,
+    session_id=sessions.createSession(twelec_globals.session_name,
                             mandatory_keywords,
                             optional_keywords,
                             hours_before,
-                            language_string,
-                            hits_page_size,
+                            twelec_globals.language_string,
                             max_search_hits)
-    processTweets.processTweets()
-    return(displayToStr.displayToStr())
+    if session_id==-1 :
+        return(render_template("error.html",cause="Database error (session creation)"))        
+    
+    fetchTweets.fetchTweets(twelec_globals.a_token,
+                            twelec_globals.a_secret,
+                            twelec_globals.c_key,
+                            twelec_globals.c_secret,
+                            session_id)
+    
+    processTweets.processTweets(session_id)
+    
+    return(displayToStr.displayToStr(session_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

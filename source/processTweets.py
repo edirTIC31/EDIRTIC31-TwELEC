@@ -95,7 +95,7 @@ def scoreTweet(tweet,session):
 
 ############################################################################## 
 
-def processTweets() :
+def processTweets(session_id) :
     with lite.connect("twitter.db") as con:
 
         cur_in=con.cursor()
@@ -103,11 +103,11 @@ def processTweets() :
         cur_update=con.cursor()
         
         # Retrieve the session id
-        cur_in.execute("SELECT rowid,* FROM Sessions WHERE Name=?",(session_name,))
+        cur_in.execute("SELECT rowid,* FROM Sessions WHERE rowid=?",(session_id,))
 
         row=cur_in.fetchone()
         if row == None:
-            print("No Such session as",session_name)
+            print("No Such session as ",repr(session_id))
             sys.exit(1)
 
         session=row

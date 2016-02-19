@@ -10,9 +10,6 @@ import twelec_globals
 #####################################################
 
 
-def validateSearch(m_kw) :
-    return(len(m_kw)<=9)
-
 def buildQuery(m_kw):
     q_string=m_kw[0]
     # Add all mandatory keywords 
@@ -44,40 +41,26 @@ def fetchTweets(a_token,
                 a_secret,
                 c_key,
                 c_secret,
-                session_name,
-                mandatory_keywords,
-                optional_keywords,
-                hours_before,
-                language_string,
-                hits_page_size,
-                max_search_hits):
+                session_id):
 
     #Setting up access to the Twitter API
     session_auth=OAuth(a_token,a_secret, c_key, c_secret)
     session=Twitter(auth=session_auth)
 
-    # Check whether request contrains too many operators
-    if not validateSearch(mandatory_keywords):
-        print("Query too complex for Twitter Search API")
-        sys.exit(1)
-
     # Connect to the DB
     with lite.connect('twitter.db') as con:
-        cur=con.cursor()
+        cur=con.cursor()       
 
-    # Create a new session
-    cur.execute("INSERT INTO Sessions VALUES(?,?,?,?,?,?)",
-                (session_name,
-                 twelec_globals.session_states['running'],
-                 json.dumps(mandatory_keywords),
-                 json.dumps(optional_keywords),
-                 hours_before,
-                 language_string))
+        # Retrieve session data
+        cur.execute("SELECT * FROM Sessions WHERE rowid==?",(session_id,))
+        row=cur.fetchone()
 
-    # Get the ID of the session added as it
-    # will be used later for adding tweets
-    session_id=cur.lastrowid            
-
+        mandatory_keywords=json.loads(row[2])
+        optional_keywords=json.loads(row[3])
+        hours_before=row[4]
+        language_string=json.loads(row[5])
+        max_search_hits=row[6]
+         
     # No search hits so far, starting from
     # the "first" tweet
     search_hits=0
@@ -95,8 +78,9 @@ def fetchTweets(a_token,
         # max_id is set to "" for the first iteration
         result=session.search.tweets(q=query_string,
                                     lang=language_string,
-                                    count=str(hits_page_size),
+                                    count=str(twelec_globals.hits_page_size),
                                     max_id=max_id_str)
+        
       
         # If any
         if len(result['statuses'])>0 :
