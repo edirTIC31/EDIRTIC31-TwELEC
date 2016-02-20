@@ -3,7 +3,8 @@ import sqlite3 as lite
 import sys
 import cgi
 import io
-from flask import render_template
+from flask import render_template, url_for
+import os
 
 import twelec_globals
 import sessions
@@ -12,7 +13,7 @@ import tweets
 ############################################
 
 
-def strHeader(session) :
+def strHeader(session_id,session) :
     return("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\
     \"http://www.w3.org/TR/html4/loose.dtd\">\
     <html>\
@@ -21,19 +22,22 @@ def strHeader(session) :
     <title>Tweet results</title>"+
     "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+" et "+repr(json.loads(session[3]))+" depuis "+str(session[4])+" heures<BR><BR>"+
     "</head>\
-    <body>\
-    <table style=\"width:100%\" border=1>\
-    <tr>\
-    <th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th>")
+    <body>\""+
+    "<form name=\"feedback_form\" action=\"/feedback\" method=\"post\">\n"+
+    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">"+  
+    "<table style=\"width:100%\" border=1>\
+    <tr><th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th><th>J\'aime</th><th>Bannir</th>")
     
 def strTrailer() :
-    return("</table>\
-        </body>\
-        </html>")
+    return("</table><BR><BR><center><input type=\"submit\" value=\"envoyer\"></center>\
+    </form>\
+    </body>\
+    </html>")
         
         
 def strTweet(tweet_row,score):
 
+    tweet_id=tweet_row[1]
     tweet=json.loads(tweet_row[2])
     
     output=io.StringIO()
@@ -74,7 +78,8 @@ def strTweet(tweet_row,score):
     finally:
         output.write("</td>\n")
 
-    output.write("</tr>\n")
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='fav_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=fav_"+str(tweet_id)+"\"></td>\n")
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='ban_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=band_"+str(tweet_id)+"\"></td>\n")
     content=output.getvalue()
     output.close()
     return(content)
@@ -92,7 +97,7 @@ def displayToStr(session_id):
             return(render_template("error.html",cause="Session inexistante"))
         
         # Print HTML headers
-        output=output+strHeader(session)
+        output=output+strHeader(session_id,session)
 
         # Retrieve all tweets related to that session
         cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))

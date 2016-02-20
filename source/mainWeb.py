@@ -1,9 +1,10 @@
 import createDB
 import fetchTweets
 import processTweets
-import displayToStr
+import displayTweets
 import sessions
 import twelec_globals
+import feedback
 
 from flask import Flask, render_template, request
 
@@ -22,6 +23,10 @@ app = Flask(__name__)
 def TwELECForm():
     return(render_template("start.html"))
 
+@app.route('/feedback',methods=['POST'])
+def TwELECFeedback():
+    return(feedback.feedback(request))
+    
 @app.route('/fetch',methods=['POST'])
 def TwELEC():
 
@@ -93,7 +98,7 @@ def TwELEC():
     
     processTweets.processTweets(session_id)
     
-    return(displayToStr.displayToStr(session_id))
+    return(displayTweets.displayToStr(session_id))
 
 if __name__ == '__main__':
     app.run(debug=True)
