@@ -22,7 +22,7 @@ def strHeader(session_id,session) :
     <title>Tweet results</title>"+
     "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+" et "+repr(json.loads(session[3]))+" depuis "+str(session[4])+" heures<BR><BR>"+
     "</head>\
-    <body>\""+
+    <body>"+
     "<form name=\"feedback_form\" action=\"/feedback\" method=\"post\">\n"+
     "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">"+  
     "<table style=\"width:100%\" border=1>\
