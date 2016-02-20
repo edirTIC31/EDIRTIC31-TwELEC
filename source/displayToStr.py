@@ -4,6 +4,8 @@ import sys
 import cgi
 import io
 import twelec_globals
+import sessions
+from flask import render_template
 
 ############################################
 
@@ -80,16 +82,12 @@ def displayToStr(session_id):
         output=""
         cur=con.cursor()
 
-        # Retrieve the session id
-        cur.execute("SELECT * FROM Sessions WHERE rowid=?",(session_id,))
-
-        row=cur.fetchone()
-        if row == None:
-            print("No Such session as %s",session_id)
-            sys.exit(1)
+        session=sessions.getSessionByID(session_id)
+        if session == None:
+            return(render_template("error.html",cause="Session inexistante"))
         
         # Print HTML headers
-        output=output+strHeader(row)
+        output=output+strHeader(session)
 
         # Retrieve all tweets related to that session
         cur.execute("SELECT TwId, Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))

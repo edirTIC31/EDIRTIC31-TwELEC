@@ -2,6 +2,7 @@ import sqlite3 as lite
 import twelec_globals
 import json
 
+# Creates a new session, returns a session_id
 def createSession(session_name,
                   mandatory_keywords,
                   optional_keywords,
@@ -28,3 +29,17 @@ def createSession(session_name,
         session_id=cur.lastrowid
 
         return(session_id)
+
+
+def getSessionByID(session_id):
+
+        # Connect to the DB
+    with lite.connect('twitter.db') as con:
+        cur=con.cursor()
+
+    cur.execute("SELECT * FROM Sessions WHERE rowid=?",(session_id,))
+
+    row=cur.fetchone()
+    return(row)
+
+        
