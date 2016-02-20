@@ -78,8 +78,8 @@ def strTweet(tweet_row,score):
     finally:
         output.write("</td>\n")
 
-    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='fav_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=fav_"+str(tweet_id)+"\"></td>\n")
-    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='ban_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=band_"+str(tweet_id)+"\"></td>\n")
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='fav_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"fav_"+str(tweet_id)+"\"></td>\n")
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='ban_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"ban_"+str(tweet_id)+"\"></td>\n")
     content=output.getvalue()
     output.close()
     return(content)
