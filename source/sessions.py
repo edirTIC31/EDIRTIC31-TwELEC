@@ -16,7 +16,7 @@ def createSession(session_name,
 
         # Create a new session
         cur.execute("INSERT INTO Sessions VALUES(?,?,?,?,?,?,?)",
-                    (session_name,
+                    (json.dumps(session_name),
                     twelec_globals.session_states['running'],
                     json.dumps(mandatory_keywords),
                     json.dumps(optional_keywords),

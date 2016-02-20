@@ -3,9 +3,11 @@ import sqlite3 as lite
 import sys
 import cgi
 import io
+from flask import render_template
+
 import twelec_globals
 import sessions
-from flask import render_template
+import tweets
 
 ############################################
 
@@ -17,7 +19,7 @@ def strHeader(session) :
     <head>\
     <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\
     <title>Tweet results</title>"+
-    "<H1>Résultats</H1>Recherche des mots-clé "+repr(session[2])+" et "+repr(session[3])+" depuis "+str(session[4])+" heures<BR><BR>"+
+    "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+" et "+repr(json.loads(session[3]))+" depuis "+str(session[4])+" heures<BR><BR>"+
     "</head>\
     <body>\
     <table style=\"width:100%\" border=1>\
@@ -30,7 +32,10 @@ def strTrailer() :
         </html>")
         
         
-def strTweet(id,tweet,score):
+def strTweet(tweet_row,score):
+
+    tweet=json.loads(tweet_row[2])
+    
     output=io.StringIO()
     output.write("<tr>")
     
@@ -90,12 +95,13 @@ def displayToStr(session_id):
         output=output+strHeader(session)
 
         # Retrieve all tweets related to that session
-        cur.execute("SELECT TwId, Json,Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
+        cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
 
         row=cur.fetchone()
         while row != None:
-            if row[2]!=0 or twelec_globals.keep_zero_score:
-                output=output+strTweet(row[0],json.loads(row[1]),row[2])
+            if row[1]!=0 or twelec_globals.keep_zero_score:
+                tweet=tweets.getTweetByID(row[0])
+                output=output+strTweet(tweet,row[1])
             row=cur.fetchone()
                     
         output=output+strTrailer()

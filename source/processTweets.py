@@ -6,6 +6,7 @@ import pytz
 import math
 
 import twelec_globals
+import sessions
 
 ############################################################################## 
 
@@ -38,9 +39,9 @@ def scoreTweet(tweet,session):
     score=initial_score
     num_photos=0
 
-    # If an optional keywords are present
-    # increase score by 5
-    for o_kw in json.loads(session[4]):
+    # If optional keywords are present
+    # increase score by 5 for each keyword
+    for o_kw in json.loads(session[3]):
         if o_kw in tweet['text']:
             score=score+bonus_optional_keyword
 
@@ -81,7 +82,7 @@ def scoreTweet(tweet,session):
     delta_hours=delta.days*24+(delta.seconds/3600)
 
     # Get the session "past depth"
-    max_hours=session[5]
+    max_hours=session[4]
     if max_hours==-1:
         max_hours=360
 
@@ -101,20 +102,17 @@ def processTweets(session_id) :
         cur_in=con.cursor()
         cur_out=con.cursor()
         cur_update=con.cursor()
+
+        # Retrieve session data
+        session=sessions.getSessionByID(session_id)
         
-        # Retrieve the session id
-        cur_in.execute("SELECT rowid,* FROM Sessions WHERE rowid=?",(session_id,))
-
-        row=cur_in.fetchone()
-        session=row
-
         # Retrieve all tweets related to that session and that are unprocessed
-        cur_in.execute("SELECT TwId,Json FROM FetchedTweets WHERE Session=? and State=?",(session[0],twelec_globals.tweet_states['unprocessed']))
+        cur_in.execute("SELECT TwId,Json FROM FetchedTweets WHERE Session=? and State=?",(session_id,twelec_globals.tweet_states['unprocessed']))
 
         row=cur_in.fetchone()
         while row != None:
             score=scoreTweet(json.loads(row[1]),session)
-            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?,?)",(session[0],row[0],row[1],score))
+            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
             cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed'],row[0]))
             row=cur_in.fetchone()
                 

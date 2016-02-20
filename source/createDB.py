@@ -19,7 +19,7 @@ def createDB():
 
         # Create the kept tweets table
         cur.execute("DROP TABLE IF EXISTS KeptTweets")
-        cur.execute("CREATE TABLE KeptTweets(Session INTEGER, TwID INTEGER, Json TEXT, Score INTEGER)")
+        cur.execute("CREATE TABLE KeptTweets(Session INTEGER, TwID INTEGER, Score INTEGER)")
 
   
     if con:

@@ -6,6 +6,7 @@ import sqlite3 as lite
 import sys
 
 import twelec_globals
+import sessions
 
 #####################################################
 
@@ -45,21 +46,20 @@ def fetchTweets(a_token,
 
     #Setting up access to the Twitter API
     session_auth=OAuth(a_token,a_secret, c_key, c_secret)
-    session=Twitter(auth=session_auth)
+    tw_session=Twitter(auth=session_auth)
 
     # Connect to the DB
     with lite.connect('twitter.db') as con:
         cur=con.cursor()       
 
         # Retrieve session data
-        cur.execute("SELECT * FROM Sessions WHERE rowid==?",(session_id,))
-        row=cur.fetchone()
+        session=sessions.getSessionByID(session_id)
 
-        mandatory_keywords=json.loads(row[2])
-        optional_keywords=json.loads(row[3])
-        hours_before=row[4]
-        language_string=json.loads(row[5])
-        max_search_hits=row[6]
+        mandatory_keywords=json.loads(session[2])
+        optional_keywords=json.loads(session[3])
+        hours_before=session[4]
+        language_string=json.loads(session[5])
+        max_search_hits=session[6]
          
     # No search hits so far, starting from
     # the "first" tweet
@@ -76,7 +76,7 @@ def fetchTweets(a_token,
 
         # Get next search results 
         # max_id is set to "" for the first iteration
-        result=session.search.tweets(q=query_string,
+        result=tw_session.search.tweets(q=query_string,
                                     lang=language_string,
                                     count=str(twelec_globals.hits_page_size),
                                     max_id=max_id_str)
@@ -84,7 +84,6 @@ def fetchTweets(a_token,
       
         # If any
         if len(result['statuses'])>0 :
-            search_hits+=len(result['statuses'])
       
             # add each tweet to the DB
             for status in result['statuses']:
@@ -94,6 +93,7 @@ def fetchTweets(a_token,
                              status['id'],
                              json.dumps(status),
                              twelec_globals.tweet_states['unprocessed']))
+                search_hits=search_hits+1
 
             # Get max_id from search_metadata: next_results:
             # Example : "next_results": "?max_id=697099148768763903&q=inondation%          # 20AND%20 ...."
