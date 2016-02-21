@@ -136,24 +136,42 @@ def feedback(request):
     # Suggest new keywords based on faved tweets
     if len(faved_tweet_ids)!=0 :
         new_keywords=processFavedTweets(session_id,faved_tweet_ids)
+    else:
+        new_keywords=[]
 
+ 
+    # Get the old mandatory & optional keywords 
+    with lite.connect("twitter.db") as con:
+
+        cur=con.cursor()
+        cur.execute("SELECT Mkeyw,OKeyw FROM SESSIONS WHERE rowid=?",(session_id,))
+        row=cur.fetchone()
+        old_mkeywords=json.loads(row[0])
+        old_okeywords=json.loads(row[1])
+
+        # Update keywords from the form
+        try:
+            new_mkeywords=request.form['mkw'].split(" ")
+        except KeyError:
+            new_mkeywords=old_mkeywords
+
+        try:
+            new_okeywords=request.form['okw'].split(" ")
+        except KeyError:
+            new_okeywords=old_okeywords
+
+        # Add the new suggested keyword from the fav's - if any
         if new_keywords != []:
-            # Add these keywords to the session keywords
-            with lite.connect("twitter.db") as con:
+            new_mkeywords=new_mkeywords+new_keywords
 
-                cur=con.cursor()
-                cur.execute("SELECT Mkeyw FROM SESSIONS WHERE rowid=?",(session_id,))
-                row=cur.fetchone()
-                old_keywords=json.loads(row[0])
-                old_keywords=old_keywords+new_keywords
-                cur.execute("UPDATE Sessions SET Mkeyw=? WHERE rowid=?",(json.dumps(old_keywords),session_id,))
+        cur.execute("UPDATE Sessions SET Mkeyw=?,Okeyw=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),session_id))
                         
-            fetchTweets.fetchTweets(twelec_globals.a_token,
-                                    twelec_globals.a_secret,
-                                    twelec_globals.c_key,
-                                    twelec_globals.c_secret,
-                                    session_id)
+    fetchTweets.fetchTweets(twelec_globals.a_token,
+                            twelec_globals.a_secret,
+                            twelec_globals.c_key,
+                            twelec_globals.c_secret,
+                            session_id)
     
-            processTweets.processTweets(session_id)
+    processTweets.processTweets(session_id)
     
     return(displayTweets.displayToStr(session_id))

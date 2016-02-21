@@ -16,8 +16,6 @@ hits_page_size=8
 
 language_string="fr"
 
-session_name="test_session"
-
 # Keep tweets with a zero score
 keep_zero_score = False
 

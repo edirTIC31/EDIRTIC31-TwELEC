@@ -7,6 +7,8 @@ import twelec_globals
 import feedback
 
 from flask import Flask, render_template, request
+from random import choice
+from string import ascii_uppercase
 
 #####################################################
 
@@ -26,7 +28,12 @@ def TwELECForm():
 @app.route('/feedback',methods=['POST'])
 def TwELECFeedback():
     return(feedback.feedback(request))
-    
+
+@app.route('/createDB')
+def TwELECCreateDB():
+    createDB.createDB()
+    return(render_template("createDB.html"))
+        
 @app.route('/fetch',methods=['POST'])
 def TwELEC():
 
@@ -79,9 +86,9 @@ def TwELEC():
     if not validateSearch(mandatory_keywords):
         return(render_template("error.html",cause="Trop de mots clés, maximum 9 autorisés"))
 
-
-    createDB.createDB()
-    session_id=sessions.createSession(twelec_globals.session_name,
+    # Create a random session name
+    session_name=''.join(choice(ascii_uppercase) for i in range(12))
+    session_id=sessions.createSession(session_name,
                             mandatory_keywords,
                             optional_keywords,
                             hours_before,

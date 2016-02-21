@@ -14,19 +14,47 @@ import tweets
 
 
 def strHeader(session_id,session) :
-    return("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\
+
+    # Build input field value based on mandatory keywords
+    mkwords=json.loads(session[2])
+
+    mkw_field=mkwords[0]
+    for mkw in mkwords[1:]:
+        mkw_field=mkw_field+" "+mkw
+
+    # Build input field value based on optional keywords
+    okwords=json.loads(session[3])
+
+    if len(okwords) > 0 :
+        okw_field=okwords[0]
+        for okw in okwords[1:]:
+            okw_field=okw_field+" "+okw
+    else:
+        okw_field=""
+                
+    output="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\
     \"http://www.w3.org/TR/html4/loose.dtd\">\
     <html>\
     <head>\
     <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\
-    <title>Tweet results</title>"+
-    "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+"(obligatoires) et "+repr(json.loads(session[3]))+"(optionnels) depuis "+str(session[4])+" heures<BR><BR>"+
-    "</head>\
-    <body>"+
-    "<form name=\"feedback_form\" action=\"/feedback\" method=\"post\">\n"+
-    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">"+  
+    <title>Tweet results</title>"
+    output=output+"</head>\
+    <body>\
+    <form name=\"feedback_form\" action=\"/feedback\" method=\"post\">\n"
+
+    output=output+"<H1>Résultats</H1>Recherche des mots-clé <INPUT TYPE=\"TEXT\" NAME=\"mkw\" VALUE=\""+ mkw_field+"\">"+\
+    " (obligatoires) et <INPUT TYPE=\"TEXT\" NAME=\"okw\" VALUE=\""+\
+    okw_field+"\">"+\
+    " (optionnels) "
+    if session[4] != -1 :
+        output=output+"depuis "+\
+        str(session[4])+" heures"
+    output=output+"<BR><BR>"+\
+    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">"+\
     "<table style=\"width:100%\" border=1>\
-    <tr><th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th><th>J\'aime</th><th>Bannir</th>")
+    <tr><th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th><th>J\'aime</th><th>Bannir</th>"
+
+    return output
     
 def strTrailer() :
     return("</table><BR><BR><center><input type=\"submit\" value=\"envoyer\"></center>\
