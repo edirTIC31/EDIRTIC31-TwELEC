@@ -20,7 +20,7 @@ def strHeader(session_id,session) :
     <head>\
     <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\
     <title>Tweet results</title>"+
-    "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+" et "+repr(json.loads(session[3]))+" depuis "+str(session[4])+" heures<BR><BR>"+
+    "<H1>Résultats</H1>Recherche des mots-clé "+repr(json.loads(session[2]))+"(obligatoires) et "+repr(json.loads(session[3]))+"(optionnels) depuis "+str(session[4])+" heures<BR><BR>"+
     "</head>\
     <body>"+
     "<form name=\"feedback_form\" action=\"/feedback\" method=\"post\">\n"+
@@ -63,7 +63,7 @@ def strTweet(tweet_row,score):
 
     # print text
     output.write("<td>\n")
-    output.write("<A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>>"+tweet['text']+"</A>\n")
+    output.write("<A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
     output.write("</td>\n")
 
     # Print images if any

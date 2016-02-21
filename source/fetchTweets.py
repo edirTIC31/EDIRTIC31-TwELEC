@@ -87,13 +87,19 @@ def fetchTweets(a_token,
       
             # add each tweet to the DB
             for status in result['statuses']:
-                # Id the tweet already exists, this part is ignored
-                cur.execute("INSERT INTO FetchedTweets VALUES(?,?,?,?)",
-                            (session_id,
-                             status['id'],
-                             json.dumps(status),
-                             twelec_globals.tweet_states['unprocessed']))
-                search_hits=search_hits+1
+                try:
+                    # Id the tweet already exists, this part is ignored
+                    cur.execute("INSERT INTO FetchedTweets VALUES(?,?,?,?)",
+                                (session_id,
+                                status['id'],
+                                json.dumps(status),
+                                twelec_globals.tweet_states['unprocessed']))
+                    search_hits=search_hits+1
+                except lite.IntegrityError:
+                    # This exception is triggered in case a tweet already
+                    # saved in a prior instance of the session is inserted
+                    # again
+                    pass
 
             # Get max_id from search_metadata: next_results:
             # Example : "next_results": "?max_id=697099148768763903&q=inondation%          # 20AND%20 ...."

@@ -15,7 +15,7 @@ def createDB():
   
         # Create the fetched tweets table
         cur.execute("DROP TABLE IF EXISTS FetchedTweets")
-        cur.execute("CREATE TABLE FetchedTweets(Session INTEGER, TwID INTEGER PRIMARY KEY, Json TEXT, State INTEGER)")
+        cur.execute("CREATE TABLE FetchedTweets(Session INTEGER, TwID INTEGER, Json TEXT, State INTEGER, PRIMARY KEY(TwID,Session))")
 
         # Create the kept tweets table
         cur.execute("DROP TABLE IF EXISTS KeptTweets")
