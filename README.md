@@ -16,7 +16,7 @@ Python 3.x avec les modules *Twitter*, *Flask* et *pytz*, les autres modules son
 
 Plusieurs fichiers Python à éxécuter en application web (Flask)
 
-## Mode d'emploi
+## Installation
 
 
 Configurer le mot de passe de session et les droits d'accès à Twitter dans *twelec_globals.py*
@@ -35,6 +35,17 @@ Pour tester en local : <code>python3 mainWeb.py</code> en utilisant le serveur w
 L'URL '/' est routée sur la page d'entrée.
 
 Enfin, pour l'explication de l'intégration entre Flask, *mod_wsgi* et Apache2, c'est ici : http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
+
+## Usage
+
+Deux URL sont disponibles :
+  * */createDB* pour créer, réinitialiser la DB (! pour le moment cette fonctionnalité n'est pas protégée par un mot de passe)
+  * */* pour démarrer une session de TwELEC
+
+### Démarrage d'une session
+
+(to be completed)
+
 
 ## Les évolutions prévues du code 
 
