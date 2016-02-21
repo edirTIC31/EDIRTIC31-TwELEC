@@ -44,7 +44,32 @@ Deux URL sont disponibles :
 
 ### Démarrage d'une session
 
-(to be completed)
+La page de démarrage demande de founir :
+  * Un mot de passe ... (/no comment/)
+  * Des mots clés obligatoires (séparés par des espaces). Ils seront utilisés pour rechercher des Tweets. **Attention** : lorsque Twitter ne trouve pas beaucoup de tweets liés à ces mots clés, il n'honore pas toulours complètement la liste. Ce champ ne peut être laissé vide
+  * Des mots clés optionnels : ils sont ... optionnels 
+  * Le nombre d'heures à remonter dans le passé : Twitter limite cette capacité à environ 1 semaines (168 heures). Ceci étant, en mettant '-1', vous demandez à Twitter d'aller aussi loin que possible dans le passé. Une remarque en passant : quand on utilise la fonction *search* de l'application officielle Twitter, il n'y a pas cette limite.
+  * Le nombre de tweets à trouver
+
+### L'affichage des résultats
+
+La page des résultats est structurée comme suit :
+  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. 
+  * Un tableau avec une ligne par tweet trouvé. Les informations suivantes sont affichées :
+    1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
+    2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
+    3. L'heure d'envoi du tweet (au format international)
+    4. Le texte du tweet avec un lien vers le tweet original
+    5. L'image (ou les images) incluses dans le tweet
+    6. Un bouton *j'aime* et un bouton *bannir* (voir ci-dessous)
+
+*Bannir un tweet* : celui-ci disparaît de la liste (et dans une même session, il ne va plus réapparaître).
+
+*Aimer un tweet* : le contenu du tweet est utilisé pour "deviner" des mots clés pertinents ... et la recherche est mise à jour avec ces nouveaux mots clés lors qu'on clique sur le bouton *rafraîchir* (bouton à coté de la liste des mots clés). 
+
+Tous les autres tweets qui ne sont ni bannis, ni aimés sont conservés tels quels. 
+
+Enfin, on peut à la fois aimer et bannir ... mais dans ce cas, il ne se passe rien !
 
 
 ## Les évolutions prévues du code 
