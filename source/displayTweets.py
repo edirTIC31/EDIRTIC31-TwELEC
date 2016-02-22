@@ -50,7 +50,7 @@ def strHeader(session_id,session) :
         output=output+"depuis "+\
         str(session[4])+" heures"
     output=output+\
-    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\"><input type=\"submit\" value=\"rafraichir\"><BR><BR>"+\
+    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">Coup de pouce <input type=\"checkbox\" name=\"cdp\"><input type=\"submit\" value=\"rafraichir\"><BR><BR>"+\
     "<table style=\"width:100%\" border=1>\
     <tr><th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th><th>J\'aime</th><th>Bannir</th>"
 
@@ -123,7 +123,8 @@ def displayToStr(session_id):
 
         output=""
         cur=con.cursor()
-
+        cur_delete=con.cursor()
+        
         session=sessions.getSessionByID(session_id)
         if session == None:
             return(render_template("error.html",cause="Session inexistante"))
@@ -136,9 +137,13 @@ def displayToStr(session_id):
 
         row=cur.fetchone()
         while row != None:
-            if row[1]!=0 or twelec_globals.keep_zero_score:
+            if row[1]!=0:
                 tweet=tweets.getTweetByID(row[0])
                 output=output+strTweet(tweet,row[1])
+            # If the score is zero and we do not keep tweets with zero
+            # remove it from the kept list
+            elif twelec_globals.keep_zero_score==False :
+                cur_delete.execute("DELETE FROM KeptTweets WHERE TwID=?",(row[0],))
             row=cur.fetchone()
                     
         output=output+strTrailer()

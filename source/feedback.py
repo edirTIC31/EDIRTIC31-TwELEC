@@ -42,6 +42,12 @@ def splitTweetInWords(tweet_text):
         if keep and tweet_word in twelec_globals.stop_words :
             keep=False    
 
+        if keep and tweet_word[0] in ('\"','\''):
+            tweet_word=tweet_word[1:]
+
+        if keep and tweet_word[-1] in ('\"','\''):
+            tweet_word=tweet_word[:-1]
+           
         if keep and len(tweet_word) < 3:
             keep=False
             
@@ -50,9 +56,8 @@ def splitTweetInWords(tweet_text):
 
     return filtered_words
 
-def suggestNewKeywords(session_id,tweet_words):
+def computeNewKeywords(session_id,tweet_words,frequency_threshold):
 
-    print(tweet_words)
 
     # Compute the 10 most common words
     word_hist=Counter(tweet_words).most_common(10)
@@ -69,15 +74,14 @@ def suggestNewKeywords(session_id,tweet_words):
     # For new keywords found more than two time and not yet in the
     # the existing keyword list, add                     
     for (keyword,freq) in word_hist:
-        if freq<3:
+        if freq<frequency_threshold:
             break
         if keyword not in old_keywords:
             new_keywords.append(keyword)
         
-    print(new_keywords)
     return new_keywords
 
-def processFavedTweets(session_id,tweet_ids):
+def suggestTweetKeywords(session_id,tweet_ids,frequency_threshold):
 
     all_words=[]
     # For each tweet texts
@@ -94,7 +98,7 @@ def processFavedTweets(session_id,tweet_ids):
                # to process later
                all_words=all_words+splitTweetInWords(tweet_text)
         
-    new_keywords=suggestNewKeywords(session_id,all_words)
+    new_keywords=computeNewKeywords(session_id,all_words,frequency_threshold)
     
     return new_keywords
     
@@ -102,7 +106,8 @@ def feedback(request):
 
     session_id=int(request.form['session_id'])
     faved_tweet_ids=[]
-
+    hint_tweet_ids=[]
+    
     # Browse all kept tweets and check wether
     # some are marked as to ban or faved
     with lite.connect("twitter.db") as con:
@@ -115,6 +120,9 @@ def feedback(request):
 
         row=cur.fetchone()
         while row != None:
+            # Add the tweet is to the hint list (in case a hint is request - see below)
+            hint_tweet_ids.append(row[0])
+            
             # If the tweet is banned, remove it from the kept table and tag it as banned in the fetched table
             try:
                 if request.form['ban_'+str(row[0])]=="on" and 'fav_'+str(row[0]) not in (request.form).keys():                
@@ -135,12 +143,19 @@ def feedback(request):
             
     # Suggest new keywords based on faved tweets
     if len(faved_tweet_ids)!=0 :
-        new_keywords=processFavedTweets(session_id,faved_tweet_ids)
+        new_keywords=suggestTweetKeywords(session_id,faved_tweet_ids,twelec_globals.faved_frequency_threshold)
     else:
         new_keywords=[]
 
+    # If a hint is requested, compute the hint list
+    try:
+        hint_checkbox=request.form['cdp']
+        hint_keywords=suggestTweetKeywords(session_id,hint_tweet_ids,twelec_globals.hint_frequency_threshold)
+    except KeyError:
+        hint_checkbox=""
+        hint_keywords=[]
  
-    # Get the old mandatory & optional keywords 
+    # Get the old mandatory & optional keywords
     with lite.connect("twitter.db") as con:
 
         cur=con.cursor()
@@ -159,7 +174,8 @@ def feedback(request):
             new_okeywords=request.form['okw'].split(" ")
         except KeyError:
             new_okeywords=old_okeywords
-
+        new_okeywords=new_okeywords+hint_keywords
+            
         # Add the new suggested keyword from the fav's - if any
         if new_keywords != []:
             new_mkeywords=new_mkeywords+new_keywords
