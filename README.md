@@ -59,7 +59,7 @@ La page des résultats est structurée comme suit :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
     2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
     3. L'heure d'envoi du tweet (au format international)
-    4. Le texte du tweet avec un lien vers le tweet original
+    4. Le texte du tweet avec un lien vers le tweet original et une icone *new* si ce tweet apparaît pour la première fois dans la liste des résultats
     5. L'image (ou les images) incluses dans le tweet
     6. Un bouton *j'aime* et un bouton *bannir* (voir ci-dessous)
 
