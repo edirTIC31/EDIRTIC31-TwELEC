@@ -54,7 +54,7 @@ La page de démarrage demande de founir :
 ### L'affichage des résultats
 
 La page des résultats est structurée comme suit :
-  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. 
+  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. La case *coup de pouce* est ci-dessous.
   * Un tableau avec une ligne par tweet trouvé. Les informations suivantes sont affichées :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
     2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
@@ -65,11 +65,14 @@ La page des résultats est structurée comme suit :
 
 *Bannir un tweet* : celui-ci disparaît de la liste (et dans une même session, il ne va plus réapparaître).
 
-*Aimer un tweet* : le contenu du tweet est utilisé pour "deviner" des mots clés pertinents ... et la recherche est mise à jour avec ces nouveaux mots clés lors qu'on clique sur le bouton *rafraîchir* (bouton à coté de la liste des mots clés). 
+*Aimer un tweet* : le contenu du tweet 'aimés' est utilisé pour "deviner" des mots clés pertinents ... et la recherche est mise à jour avec ces nouveaux mots clés lors qu'on clique sur le bouton *rafraîchir* (bouton à coté de la liste des mots clés). 
 
 Tous les autres tweets qui ne sont ni bannis, ni aimés sont conservés tels quels. 
 
 Enfin, on peut à la fois aimer et bannir ... mais dans ce cas, il ne se passe rien !
+
+*Coup de pouce* : à partir de tous tweets affichés, coup de pouce va suggérer des mots clés qu'il rajoutera aux mots clés optionnels. 
+
 
 
 ## Les évolutions prévues du code 
