@@ -6,10 +6,10 @@
 session_password="password"
 
 # Keys to access the twitter API
-c_key = ''
-c_secret = ''
-a_token = ''
-a_secret = ''
+c_key = '6B3nETs2IzSbD9KzM1zZGGsRK'
+c_secret = '8lh7XCkCud7mpUQIPzJfyrrfgLSU8Hkz1nPotE5A6NhX5xyjol'
+a_token = '3128370077-ilNmRAEWXrsubTDeSmBYkFD8AHrW57iFnhO6t3t'
+a_secret = 'feb1DYh9KRwlpJg8S0ckO57PtPTwYIeub64TccHWCSY3P'
 
 # Define the number of search hits to ask per API call
 hits_page_size=8
@@ -31,4 +31,4 @@ stop_words=["-elle","-il","10ème","1er","1ère","2ème","3ème","4ème","5ème"
 session_states = { 'running' : 0  }
 
 # Define tweet state codes
-tweet_states = { 'unprocessed' : 0, 'processed' : 1, 'faved' : 2 , 'banned' : 3 }
+tweet_states = { 'unprocessed' : 0, 'processed' : 1, 'processed_new':2, 'faved' : 3 , 'banned' : 4 }

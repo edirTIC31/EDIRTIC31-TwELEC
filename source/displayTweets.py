@@ -91,7 +91,11 @@ def strTweet(tweet_row,score):
 
     # print text
     output.write("<td>\n")
-    output.write("<A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
+    # If the tweet is new, display a new icon before the tweet text
+    if tweet_row[3] == twelec_globals.tweet_states['processed_new']:
+        output.write("<IMG SRC=\""+url_for('static', filename='new_icon.png')+"\" WIDTH=16><A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
+    else:
+        output.write("<A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
     output.write("</td>\n")
 
     # Print images if any
@@ -138,4 +142,6 @@ def displayToStr(session_id):
             row=cur.fetchone()
                     
         output=output+strTrailer()
+
+        cur.execute("UPDATE FetchedTweets SET State=? WHERE Session=? and State=?",(twelec_globals.tweet_states['processed'],session_id,twelec_globals.tweet_states['processed_new'])) 
         return(output)

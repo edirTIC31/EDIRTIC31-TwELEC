@@ -113,6 +113,6 @@ def processTweets(session_id) :
         while row != None:
             score=scoreTweet(json.loads(row[1]),session)
             cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
-            cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed'],row[0]))
+            cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed_new'],row[0]))
             row=cur_in.fetchone()
                 
