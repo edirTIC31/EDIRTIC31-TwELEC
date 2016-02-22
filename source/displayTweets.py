@@ -49,15 +49,15 @@ def strHeader(session_id,session) :
     if session[4] != -1 :
         output=output+"depuis "+\
         str(session[4])+" heures"
-    output=output+"<BR><BR>"+\
-    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\">"+\
+    output=output+\
+    "<INPUT TYPE=\"HIDDEN\" NAME=\"session_id\" VALUE=\""+str(session_id)+"\"><input type=\"submit\" value=\"rafraichir\"><BR><BR>"+\
     "<table style=\"width:100%\" border=1>\
     <tr><th>Score</th><th>Lieu</th><th>Heure et date</th><th>Text</th><th>Image</th><th>J\'aime</th><th>Bannir</th>"
 
     return output
     
 def strTrailer() :
-    return("</table><BR><BR><center><input type=\"submit\" value=\"envoyer\"></center>\
+    return("</table><BR><BR>\
     </form>\
     </body>\
     </html>")
