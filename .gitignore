@@ -1,1 +1,5 @@
-
+source/twelec_globals.saved
+source/twelec_globals.ano
+source/__pycache__/
+source/twitter.db
+source/*.pyc

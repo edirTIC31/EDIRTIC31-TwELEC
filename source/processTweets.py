@@ -5,6 +5,9 @@ from datetime import *
 import pytz
 import math
 
+import twelec_globals
+import sessions
+
 ############################################################################## 
 
 # Session name
@@ -36,9 +39,9 @@ def scoreTweet(tweet,session):
     score=initial_score
     num_photos=0
 
-    # If an optional keywords are present
-    # increase score by 5
-    for o_kw in json.loads(session[4]):
+    # If optional keywords are present
+    # increase score by 5 for each keyword
+    for o_kw in json.loads(session[3]):
         if o_kw in tweet['text']:
             score=score+bonus_optional_keyword
 
@@ -79,7 +82,7 @@ def scoreTweet(tweet,session):
     delta_hours=delta.days*24+(delta.seconds/3600)
 
     # Get the session "past depth"
-    max_hours=session[5]
+    max_hours=session[4]
     if max_hours==-1:
         max_hours=360
 
@@ -93,28 +96,23 @@ def scoreTweet(tweet,session):
 
 ############################################################################## 
 
-def processTweets() :
+def processTweets(session_id) :
     with lite.connect("twitter.db") as con:
 
         cur_in=con.cursor()
         cur_out=con.cursor()
+        cur_update=con.cursor()
 
-        # Retrieve the session id
-        cur_in.execute("SELECT rowid,* FROM Sessions WHERE Name=?",(session_name,))
-
-        row=cur_in.fetchone()
-        if row == None:
-            print("No Such session as",session_name)
-            sys.exit(1)
-
-        session=row
-
-        # Retrieve all tweets related to that session
-        cur_in.execute("SELECT Json FROM FetchedTweets WHERE Session=?",(session[0],))
+        # Retrieve session data
+        session=sessions.getSessionByID(session_id)
+        
+        # Retrieve all tweets related to that session and that are unprocessed
+        cur_in.execute("SELECT TwId,Json FROM FetchedTweets WHERE Session=? and State=?",(session_id,twelec_globals.tweet_states['unprocessed']))
 
         row=cur_in.fetchone()
         while row != None:
-            score=scoreTweet(json.loads(row[0]),session)
-            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session[0],row[0],score))
+            score=scoreTweet(json.loads(row[1]),session)
+            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
+            cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed_new'],row[0]))
             row=cur_in.fetchone()
                 

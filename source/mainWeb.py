@@ -1,55 +1,39 @@
 import createDB
 import fetchTweets
 import processTweets
-import displayToStr
+import displayTweets
+import sessions
+import twelec_globals
+import feedback
 
 from flask import Flask, render_template, request
-
-#####################################################
-
-# Session name
-session_name="test session"
-
-# Mandatory keywords
-mandatory_keywords=["inondation"]
-
-# Optional keywords
-optional_keywords=["urgence"]
-
-# Number of hours to look up before now (< 168h)
-hours_before=100
-
-# Language to look for in the tweets
-language_string="fr"
-
-# Number of hits per request
-hits_page_size=8
-
-# Maximum number of search hits
-# may be more depending on
-# next multiple of hits_page_size
-max_search_hits=35
-
-# Session password
-s_password="password"
-
-
-# Keys to access the twitter API
-c_key = ''
-c_secret = ''
-a_token = ''
-a_secret = ''
-
+from random import choice
+from string import ascii_uppercase
 
 #####################################################
 
 
+def validateSearch(m_kw) :
+    return(len(m_kw)<=9)
+
+#####################################################
+
+    
 app = Flask(__name__)
 
 @app.route('/')
 def TwELECForm():
     return(render_template("start.html"))
 
+@app.route('/feedback',methods=['POST'])
+def TwELECFeedback():
+    return(feedback.feedback(request))
+
+@app.route('/createDB')
+def TwELECCreateDB():
+    createDB.createDB()
+    return(render_template("createDB.html"))
+        
 @app.route('/fetch',methods=['POST'])
 def TwELEC():
 
@@ -61,7 +45,7 @@ def TwELEC():
 
         try:
            passd=request.form['mdp']
-           if passd != s_password:
+           if passd != twelec_globals.session_password:
               return(render_template("error.html",cause="Echec authentification"))
         except KeyError:
               return(render_template("error.html",cause="Echec authentification"))
@@ -96,22 +80,32 @@ def TwELEC():
             max_search_hits=35
             
     else:
-        return(render_template("error.html",cause="Wrong method"))
-        
-    createDB.createDB()
-    fetchTweets.fetchTweets(a_token,
-                            a_secret,
-                            c_key,
-                            c_secret,
-                            session_name,
+        return(render_template("error.html",cause="Erreur interne envoi formulaire"))
+
+    # Check whether request contrains too many operators
+    if not validateSearch(mandatory_keywords):
+        return(render_template("error.html",cause="Trop de mots clés, maximum 9 autorisés"))
+
+    # Create a random session name
+    session_name=''.join(choice(ascii_uppercase) for i in range(12))
+    session_id=sessions.createSession(session_name,
                             mandatory_keywords,
                             optional_keywords,
                             hours_before,
-                            language_string,
-                            hits_page_size,
+                            twelec_globals.language_string,
                             max_search_hits)
-    processTweets.processTweets()
-    return(displayToStr.displayToStr())
+    if session_id==-1 :
+        return(render_template("error.html",cause="Erreur de base de données (création de session)"))        
+    
+    fetchTweets.fetchTweets(twelec_globals.a_token,
+                            twelec_globals.a_secret,
+                            twelec_globals.c_key,
+                            twelec_globals.c_secret,
+                            session_id)
+    
+    processTweets.processTweets(session_id)
+    
+    return(displayTweets.displayToStr(session_id))
 
 if __name__ == '__main__':
     app.run(debug=True)
