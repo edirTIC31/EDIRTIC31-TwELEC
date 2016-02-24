@@ -14,7 +14,7 @@
 	    Recherche des mots-clé
 	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{mkw_field}}"> (obligatoires) et
 	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{okw_field}}"> (optionnels) 
-	    {% if since_field %}
+	    {% if since_field != -1 %}
 	    sur une période de {{since_field}} heures
 	    {% endif %}
 	  </TD>

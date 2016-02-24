@@ -157,8 +157,7 @@ def displayToStr(session_id):
         else:
             okw_field=""
 
-        if session[4] != -1:
-            since_field=session[4]
+        since_field=session[4]
             
         # Retrieve all tweets related to that session
         cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
