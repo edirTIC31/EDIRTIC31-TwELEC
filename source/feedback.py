@@ -56,6 +56,8 @@ def splitTweetInWords(tweet_text):
 
     return filtered_words
 
+
+# ** TODO ** HANDLE ERROR
 def computeNewKeywords(session_id,tweet_words,frequency_threshold):
 
 
@@ -81,6 +83,7 @@ def computeNewKeywords(session_id,tweet_words,frequency_threshold):
         
     return new_keywords
 
+# ** TODO ** HANDLE ERROR
 def suggestTweetKeywords(session_id,tweet_ids,frequency_threshold):
 
     all_words=[]
@@ -101,10 +104,12 @@ def suggestTweetKeywords(session_id,tweet_ids,frequency_threshold):
     new_keywords=computeNewKeywords(session_id,all_words,frequency_threshold)
     
     return new_keywords
-    
+
+# ** TODO ** HANDLE ERROR
 def feedback(request):
 
     session_id=int(request.form['session_id'])
+
     faved_tweet_ids=[]
     hint_tweet_ids=[]
     
@@ -143,9 +148,9 @@ def feedback(request):
             
     # Suggest new keywords based on faved tweets
     if len(faved_tweet_ids)!=0 :
-        new_keywords=suggestTweetKeywords(session_id,faved_tweet_ids,twelec_globals.faved_frequency_threshold)
+        faved_keywords=suggestTweetKeywords(session_id,faved_tweet_ids,twelec_globals.faved_frequency_threshold)
     else:
-        new_keywords=[]
+        faved_keywords=[]
 
     # If a hint is requested, compute the hint list
     try:
@@ -164,30 +169,35 @@ def feedback(request):
         old_mkeywords=json.loads(row[0])
         old_okeywords=json.loads(row[1])
 
-        # Update keywords from the form
+        # Replace mandatory keywords with the ones from the form
         try:
             new_mkeywords=request.form['mkw'].split(" ")
         except KeyError:
             new_mkeywords=old_mkeywords
 
+        # Add the new suggested keyword from the fav's - if any
+        new_mkeywords=new_mkeywords+faved_keywords
+
+            
+        # Add to the optional keywords the hinted ones - if any
         try:
             new_okeywords=request.form['okw'].split(" ")
         except KeyError:
             new_okeywords=old_okeywords
         new_okeywords=new_okeywords+hint_keywords
             
-        # Add the new suggested keyword from the fav's - if any
-        if new_keywords != []:
-            new_mkeywords=new_mkeywords+new_keywords
-
+        # Update session data
         cur.execute("UPDATE Sessions SET Mkeyw=?,Okeyw=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),session_id))
-                        
+
+    # Re run tweet search    
     fetchTweets.fetchTweets(twelec_globals.a_token,
                             twelec_globals.a_secret,
                             twelec_globals.c_key,
                             twelec_globals.c_secret,
                             session_id)
     
+    # Do scoring
     processTweets.processTweets(session_id)
-    
+
+    # and display
     return(displayTweets.displayToStr(session_id))

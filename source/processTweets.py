@@ -96,11 +96,11 @@ def scoreTweet(tweet,session):
 
 ############################################################################## 
 
+## ** TODO ** handle error case
 def processTweets(session_id) :
     with lite.connect("twitter.db") as con:
 
         cur_in=con.cursor()
-        cur_out=con.cursor()
         cur_update=con.cursor()
 
         # Retrieve session data
@@ -111,8 +111,12 @@ def processTweets(session_id) :
 
         row=cur_in.fetchone()
         while row != None:
+            # Compute the tweet score
             score=scoreTweet(json.loads(row[1]),session)
-            cur_out.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
+            if score!=0 or twelec_globals.keep_zero_score:
+                # Insert them in the kept table
+                cur_update.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
+            # And switch the state to 'processed new' in the Fetched tweet table
             cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed_new'],row[0]))
             row=cur_in.fetchone()
                 

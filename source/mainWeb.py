@@ -21,19 +21,51 @@ def validateSearch(m_kw) :
     
 app = Flask(__name__)
 
+# Start page for keyword input & other parameters
 @app.route('/')
 def TwELECForm():
     return(render_template("start.html"))
 
+# Feedback script for processing favs and banned tweets
 @app.route('/feedback',methods=['POST'])
 def TwELECFeedback():
     return(feedback.feedback(request))
 
+# Utility script for creating the DB
+# The routing can be renamed to add a little bit of secrecy
 @app.route('/createDB')
 def TwELECCreateDB():
     createDB.createDB()
     return(render_template("createDB.html"))
-        
+
+
+@app.route('/sessions')
+def TwELECsessions():
+    return(render_template("view_session.html"))
+
+@app.route('/viewSession',methods=['POST'])
+def TwELECViewSession():
+
+    # Authentification
+    try:
+        passd=request.form['mdp']
+        if passd != twelec_globals.session_password:
+            return(render_template("error.html",cause="Echec authentification"))
+    except KeyError:
+        return(render_template("error.html",cause="Echec authentification"))
+
+    try:
+         session_id=int(request.form['sid'])
+    except KeyError:
+        return(render_template("error.html",cause="Id de session absent"))
+    except ValueError:
+        return(render_template("error.html",cause="Id de session invalide"))
+    
+    
+    return(displayTweets.displayToStr(session_id))
+    
+    
+# Tweet search script from keywords proposed in '/'
 @app.route('/fetch',methods=['POST'])
 def TwELEC():
 
@@ -41,8 +73,14 @@ def TwELEC():
     # and replace the default values
     if request.method == 'POST':
 
-        mandatory_keywords=request.form['mkw'].split(" ")
+        # Parsing of the mandatory keywords
+        try:
+            # ** TODO ** : rajouter la suppresion d'espaces excedentaires
+            mandatory_keywords=request.form['mkw'].split(" ")
+        except KeyError:
+            return(render_template("error.html",cause="Pas de mot clé obligatoire fourni"))
 
+        # Authentification
         try:
            passd=request.form['mdp']
            if passd != twelec_globals.session_password:
@@ -50,11 +88,15 @@ def TwELEC():
         except KeyError:
               return(render_template("error.html",cause="Echec authentification"))
         
+        # Parsing od the optional keywords
+        # ** TODO ** Rajouter la suppresion des espaces excedentaires
         try:
            optional_keywords=request.form['okw'].split(" ")
         except KeyError:
            optional_keywords=[]
 
+        # Parsing of the depth of search (in hours past now)
+        # -1 means unspecified
         try:
             hours_before=request.form['hbf']
             if hours_before == '':
@@ -67,27 +109,30 @@ def TwELEC():
         except KeyError:
             hours_before=-1
 
+        # Parsing of the number of hits to look for           
         try:
             max_search_hits=request.form['shts']
             if max_search_hits == '':
-                max_search_hits=35
+                max_search_hits=twelec_globals.default_search_hits
             else:
                 try:
                     max_search_hits=int(max_search_hits)
                 except ValueError:
-                    max_search_hits=35
+                    max_search_hits=twelec_globals.default_search_hits
         except KeyError:
-            max_search_hits=35
+            max_search_hits=twelec_globals.default_search_hits
             
     else:
         return(render_template("error.html",cause="Erreur interne envoi formulaire"))
 
-    # Check whether request contrains too many operators
+    # Check whether the request contrains too many operators
     if not validateSearch(mandatory_keywords):
         return(render_template("error.html",cause="Trop de mots clés, maximum 9 autorisés"))
 
     # Create a random session name
     session_name=''.join(choice(ascii_uppercase) for i in range(12))
+
+    # Create the session in the DB
     session_id=sessions.createSession(session_name,
                             mandatory_keywords,
                             optional_keywords,
@@ -96,15 +141,17 @@ def TwELEC():
                             max_search_hits)
     if session_id==-1 :
         return(render_template("error.html",cause="Erreur de base de données (création de session)"))        
-    
+
+    # Fetch the tweets using the Twitter API
     fetchTweets.fetchTweets(twelec_globals.a_token,
                             twelec_globals.a_secret,
                             twelec_globals.c_key,
                             twelec_globals.c_secret,
                             session_id)
-    
+    # Score tweets
     processTweets.processTweets(session_id)
-    
+
+    # Display tweets
     return(displayTweets.displayToStr(session_id))
 
 if __name__ == '__main__':

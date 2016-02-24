@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>TWElec, l'ELEC par Twitter</title>
+
+<script>
+
+function validateForm() {
+
+  var v=document.forms["view_session_form"]["sid"];
+  var w=document.forms["view_session_form"]["mdp"];
+
+  if( (v == null || v.value == '') ) {
+
+    alert("L'id de session doit être fourni");
+    return false ;
+  } 
+
+  if( (w == null || w.value == '') ) {
+
+    alert("Le mot de passe doit être fourni");
+    return false ;
+  } 
+
+
+  return true;
+
+}
+</script>
+
+</head>
+
+<body>
+
+<H1>TwELEC, l'ELEC en twittant</H1>
+
+<BR>
+
+<form name="view_session_form" action="/viewSession" method="post">
+
+  <table>
+
+    
+  <tr>  
+  <td>Mot de passe :</td>
+  <td><input type="password" name="mdp"></td>
+  </tr>
+
+    
+  <tr>  
+  <td>Id de session :</td>
+  <td><input type="text" name="sid"></td>
+  </tr>
+
+  <tr>
+  <td colspan=2 align=center><input type="submit" value="envoyer" onClick="return validateForm();"></td>
+  </tr>
+
+  </table>  
+</form>
+
+<hr>
+</body> </html>

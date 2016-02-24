@@ -65,26 +65,32 @@ def strTrailer() :
         
 def strTweet(tweet_row,score):
 
+    # Get tweet id and tweet dictionary that will be often accessed
     tweet_id=tweet_row[1]
     tweet=json.loads(tweet_row[2])
     
+    # Prepare a string to write to
+    # (concatening string would have worked as well)
     output=io.StringIO()
+
+    # The tweet will be print as an HTML table row
     output.write("<tr>")
     
     # Print score
     output.write("<td>"+str(score)+"</td>\n")
 
-    # Print place if any
+    # Print place if any and the related google maps links
+    # This part can be improved using the coordinates entry in the tweet dict
     output.write("<td>\n")
     tweet_place=tweet['place']
     if tweet_place!=None:
         output.write("<A HREF=\"http://maps.google.com?q="+cgi.escape(tweet_place['full_name'])+"\" TARGET=_new>"+tweet_place['full_name']+"</A>\n")
     else:
         output.write("Aucun\n")
-        output.write("</td>\n")
+    output.write("</td>\n")
 
 
-    # Print date & hour
+    # Print date & hour of tweet creation
     output.write("<td>\n")
     output.write(tweet['created_at']+"\n")
     output.write("</td>\n")
@@ -93,12 +99,13 @@ def strTweet(tweet_row,score):
     output.write("<td>\n")
     # If the tweet is new, display a new icon before the tweet text
     if tweet_row[3] == twelec_globals.tweet_states['processed_new']:
-        output.write("<IMG SRC=\""+url_for('static', filename='new_icon.png')+"\" WIDTH=16><A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
+        output.write("<IMG SRC=\""+url_for('static', filename='new_icon.png')+"\" WIDTH=16><A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+\
+                     "\" TARGET=_new>"+tweet['text']+"</A>\n")
     else:
         output.write("<A HREF=\"http://www.twitter.com/statuses/"+str(tweet['id'])+"\" TARGET=_new>"+tweet['text']+"</A>\n")
     output.write("</td>\n")
 
-    # Print images if any
+    # Print images - if any
     output.write("<td align=center>")
     try :
         tweet_medias=tweet['entities']['media']
@@ -107,24 +114,28 @@ def strTweet(tweet_row,score):
                 output.write("<a href=\""+tweet_media['media_url_https']+"\" TARGET=_new><img src=\""+tweet_media['media_url_https']+"\" width=100></A>\n")
     except KeyError as e:
         output.write("Aucune\n")
-    finally:
-        output.write("</td>\n")
 
-    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='fav_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"fav_"+str(tweet_id)+"\"></td>\n")
-    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='ban_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"ban_"+str(tweet_id)+"\"></td>\n")
+    output.write("</td>\n")
+
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='fav_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"fav_"+\
+                 str(tweet_id)+"\"></td>\n")
+    output.write("<td VALIGN=\"MIDDLE\"><IMG SRC=\""+url_for('static', filename='ban_icon.png')+"\" WIDTH=16><INPUT TYPE=\"checkbox\" NAME=\"ban_"+\
+                 str(tweet_id)+"\"></td>\n")
     content=output.getvalue()
     output.close()
     return(content)
   
 ############################################
-    
+
+
+# ** TODO ** handle error case
 def displayToStr(session_id):
     with lite.connect("twitter.db") as con:
 
         output=""
         cur=con.cursor()
-        cur_delete=con.cursor()
-        
+
+        # Get the session data
         session=sessions.getSessionByID(session_id)
         if session == None:
             return(render_template("error.html",cause="Session inexistante"))
@@ -137,16 +148,15 @@ def displayToStr(session_id):
 
         row=cur.fetchone()
         while row != None:
-            if row[1]!=0:
-                tweet=tweets.getTweetByID(row[0])
-                output=output+strTweet(tweet,row[1])
-            # If the score is zero and we do not keep tweets with zero
-            # remove it from the kept list
-            elif twelec_globals.keep_zero_score==False :
-                cur_delete.execute("DELETE FROM KeptTweets WHERE TwID=?",(row[0],))
+            # Get tweet data
+            tweet=tweets.getTweetByID(row[0],session_id)
+            output=output+strTweet(tweet,row[1])
             row=cur.fetchone()
-                    
+
+        # Print HTML trailers
         output=output+strTrailer()
 
+        # Switch tweets from the Kept table from 'processed_new' to 'processed'
         cur.execute("UPDATE FetchedTweets SET State=? WHERE Session=? and State=?",(twelec_globals.tweet_states['processed'],session_id,twelec_globals.tweet_states['processed_new'])) 
+        # And we're done
         return(output)
