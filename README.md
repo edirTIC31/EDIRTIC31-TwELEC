@@ -41,6 +41,8 @@ Enfin, pour l'explication de l'intégration entre Flask, *mod_wsgi* et Apache2, 
 Deux URL sont disponibles :
   * */createDB* pour créer, réinitialiser la DB (! pour le moment cette fonctionnalité n'est pas protégée par un mot de passe)
   * */* pour démarrer une session de TwELEC
+  
+Un URL supplémentaire */sessions* est disponible pour visualiser les tweets résultats d'une session. C'est surtout utile à des fins de debugging.
 
 ### Démarrage d'une session
 
