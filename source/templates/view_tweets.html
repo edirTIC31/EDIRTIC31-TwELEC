@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Résultat de la recherche</title>
+  </head>
+  <body>
+
+    <form name="feedback_form" action="/feedback" method="post">
+      
+      <H1>Résultats</H1>
+      <TABLE>
+	<TR>
+	  <TD>
+	    Recherche des mots-clé
+	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{mkw_field}}"> (obligatoires) et
+	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{okw_field}}"> (optionnels) 
+	    {% if since_field %}
+	    sur une période de {{since_field}} heures
+	    {% endif %}
+	  </TD>
+	</TR>
+	<TR ALIGN=CENTER>
+	  <TD>
+	    <INPUT TYPE=HIDDEN NAME="session_id" VALUE="{{session_id}}">Coup de pouce <input type="checkbox" name="cdp">
+	    <INPUT type=SUBMIT value="rafraichir"><BR><BR>
+	  </TD>
+	</TR>
+      </TABLE>
+      <table style="width:100%" border=1>
+	<TR>
+	  <th>Score</th>
+	  <th>Lieu</th>
+	  <th>Heure et date</th>
+	  <th>Text</th>
+	  <th>Image</th>
+	  <th>J'aime</th>
+	  <th>Bannir</th>
+	</TR>
+	
+	{% for tweet_elm in tweets_set %}
+	
+	<TR>
+	  <td>
+	    {{tweet_elm['score']}}
+	  </td>
+
+	  <td>
+	    {% if tweet_elm ['place'] %}
+	    <A HREF="http://maps.google.com?q={{tweet_elm['place']}}" TARGET=_new>{{tweet_elm['place']}}</A>
+	    {% else %}
+	    aucun
+	    {% endif %}
+	  </td>
+
+	  <td>
+	    {{tweet_elm['created_at']}}
+	  </td>
+	  
+	  <td>
+	    {% if tweet_elm['new'] %}
+	    <IMG SRC="{{url_for('static',filename='new_icon.png')}}" WIDTH=16>
+	    {% endif %}
+	    
+	    <A HREF="http://www.twitter.com/statuses/{{tweet_elm['id']}}" TARGET=_new>{{tweet_elm['text']}}</A>
+	  </td>
+	  
+	  <td>
+	    {% if tweet_elm['medias'] %}
+	    {% for media in tweet_elm ['medias'] %}
+	    <A HREF="{{media}}" TARGET=_new><IMG SRC="{{media}}" WIDTH=100></A>
+	    {% endfor %}
+	    {% else %}
+	    aucune
+	    {% endif %}
+	  </td>
+	    
+	  <td VALIGN="MIDDLE">
+	    <IMG SRC="{{url_for('static', filename='fav_icon.png')}}" WIDTH=16><INPUT TYPE="checkbox" NAME="fav_{{tweet_elm['id']}}">
+	  </td>
+	  <td VALIGN="MIDDLE">
+	    <IMG SRC="{{url_for('static', filename='ban_icon.png')}}" WIDTH=16><INPUT TYPE="checkbox" NAME="ban_{{tweet_elm['id']}}">
+	  </td>
+	</TR>
+	{% endfor %}
+	
+      </table>
+    </form>
+  </body>
+</html>
+    
