@@ -56,7 +56,8 @@ La page de démarrage demande de founir :
 ### L'affichage des résultats
 
 La page des résultats est structurée comme suit :
-  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. La case *coup de pouce* est ci-dessous.
+  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. Un lien est fourni vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés).
+  * Une ligne avec un bouton *rafraîchir* et une case *coup de pouce* décrite ci-dessous.
   * Un tableau avec une ligne par tweet trouvé. Les informations suivantes sont affichées :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
     2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
