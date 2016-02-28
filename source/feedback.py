@@ -42,10 +42,10 @@ def splitTweetInWords(tweet_text):
         if keep and tweet_word in twelec_globals.stop_words :
             keep=False    
 
-        if keep and tweet_word[0] in ('\"','\''):
+        if keep and tweet_word[0] in ('\"','\'','\«','\»','(',')','[',']','{','}'):
             tweet_word=tweet_word[1:]
 
-        if keep and tweet_word[-1] in ('\"','\''):
+        if keep and tweet_word[-1] in ('\"','\'','\«','\»','(',')','[',']','{','}'):
             tweet_word=tweet_word[:-1]
            
         if keep and len(tweet_word) < 3:

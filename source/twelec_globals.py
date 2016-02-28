@@ -14,9 +14,6 @@ a_secret = ''
 # Define the number of search hits to ask per API call
 hits_page_size=8
 
-# Default number of search hits
-default_search_hits=35
-
 language_string="fr"
 
 # Keep tweets with a zero score

@@ -17,6 +17,9 @@
 	    {% if since_field != -1 %}
 	    sur une période de {{since_field}} heures
 	    {% endif %}
+	    {% if tweets_set != [] %}
+	      <A HREF="/displayTweetsStats?session_id={{session_id}}" TARGET=_new>statistiques</A>
+	    {% endif %}
 	  </TD>
 	</TR>
 	<TR ALIGN=CENTER>

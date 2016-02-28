@@ -2,11 +2,12 @@ import createDB
 import fetchTweets
 import processTweets
 import displayTweets
+import displayTweetsStats
 import sessions
 import twelec_globals
 import feedback
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 from random import choice
 from string import ascii_uppercase
 
@@ -37,7 +38,19 @@ def TwELECFeedback():
 def TwELECCreateDB():
     createDB.createDB()
     return(render_template("createDB.html"))
+    
+@app.route('/displayTweetsStats',methods=['GET'])
+def TwELECDisplayTweetsStats():
+    try:
+        session_id=request.args['session_id']
+    except KeyError:
+        return(render_template("error.html",cause="Paramètres GET mal formatés"))
 
+    return(displayTweetsStats.displayTweetsStats(session_id))
+
+@app.route('/fig/HistoKeywords/<session_id>')
+def figHistoKeywords(session_id):
+    return send_file(displayTweetsStats.drawHistoKeywords(session_id), mimetype='image/png')
 
 @app.route('/sessions')
 def TwELECsessions():
