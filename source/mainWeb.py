@@ -52,6 +52,10 @@ def TwELECDisplayTweetsStats():
 def figHistoKeywords(session_id):
     return send_file(displayTweetsStats.drawHistoKeywords(session_id), mimetype='image/png')
 
+@app.route('/fig/HistoTweetAge/<session_id>')
+def figHistoTweetAge(session_id):
+    return send_file(displayTweetsStats.drawHistoTweetAge(session_id), mimetype='image/png')
+
 @app.route('/sessions')
 def TwELECsessions():
     return(render_template("view_session.html"))
