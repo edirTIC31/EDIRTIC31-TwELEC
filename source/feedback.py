@@ -28,14 +28,14 @@ def splitTweetInWords(tweet_text):
     tweet_text=tweet_text.join(filtered_words)
 
     # Tokenize text based on multiple separators
-    tweet_words=re.split(' |\:|\'|\+|\-|\*|\/|\\|\;|\.|\,|\=|\'|\>|\<',tweet_text)
+    tweet_words=re.split(' |\:|\'|\+|\-|\*|\/|\\|\;|\.|\,|\=|\"|\«|\»|\|\>|\<|\…|\xa0',tweet_text)
     filtered_words=[]
     
     for tweet_word in tweet_words:
         
         keep=True
 
-        if tweet_word=='':
+        if tweet_word=='' or tweet_word==' ':
             keep=False
                        
         # Remove all stop words

@@ -61,7 +61,7 @@ def drawHistoKeywords(session_id):
     y_pos = np.arange(len(words))
     plt.barh(y_pos, frequencies, align='center', alpha=1)
     plt.yticks(y_pos, words,size="x-small",wrap=True)
-    plt.xlabel('# occurrences')
+    plt.xlabel("Nombre d'occurrences")
     plt.title("Fréquence des mots clés")
     
     # Draw the histogram
