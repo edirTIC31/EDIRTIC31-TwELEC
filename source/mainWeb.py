@@ -7,7 +7,7 @@ import sessions
 import twelec_globals
 import feedback
 
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, make_response
 from random import choice
 from string import ascii_uppercase
 
@@ -50,11 +50,26 @@ def TwELECDisplayTweetsStats():
 
 @app.route('/fig/HistoKeywords/<session_id>')
 def figHistoKeywords(session_id):
-    return send_file(displayTweetsStats.drawHistoKeywords(session_id), mimetype='image/png')
+    img=displayTweetsStats.drawHistoKeywords(session_id)
+    response = make_response(send_file(img, mimetype='image/png'))
+    response.headers['Pragma-directive'] = 'no-cache'
+    response.headers['Cache-directive'] = 'no-cache'
+    response.headers['Cache-control'] = 'no-cache'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/fig/HistoTweetAge/<session_id>')
 def figHistoTweetAge(session_id):
-    return send_file(displayTweetsStats.drawHistoTweetAge(session_id), mimetype='image/png')
+    img=displayTweetsStats.drawHistoTweetAge(session_id)
+    response = make_response(send_file(img, mimetype='image/png'))
+    response.headers['Pragma-directive'] = 'no-cache'
+    response.headers['Cache-directive'] = 'no-cache'
+    response.headers['Cache-control'] = 'no-cache'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 
 @app.route('/sessions')
 def TwELECsessions():

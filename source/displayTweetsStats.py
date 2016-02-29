@@ -10,11 +10,16 @@ import matplotlib.pyplot as plt
 plt.rcdefaults()
 import numpy as np
 from flask import render_template
+import filelock
 
 import feedback
 
+lock = filelock.FileLock("mplib.lock")
+
 def drawHistoTweetAge(session_id):
 
+    global lock
+    
     # Get kept tweets associated to sessions
     tweet_ids=[]
     
@@ -70,27 +75,38 @@ def drawHistoTweetAge(session_id):
     for bin in bins[1:]:
         bins_legend.append(str(prior_bin)+" - "+str(bin))
         prior_bin=bin
+
+    done=False
+    while not done:
+        try:
+            with lock.acquire(timeout = 10):
         
-    y_pos = np.arange(len(bins_legend))
-    plt.barh(y_pos, ages, alpha=1,align="center")
-    plt.yticks(y_pos, bins_legend, size="x-small")
-    plt.xlabel("Nombre de tweets de cet âge")
-    plt.title("Age (en heures) des tweets")
+                y_pos = np.arange(len(bins_legend))
+                plt.barh(y_pos, ages, alpha=1,align="center")
+                plt.yticks(y_pos, bins_legend, size="x-small")
+                plt.xlabel("Nombre de tweets de cet âge")
+                plt.title("Age (en heures) des tweets")
     
-    # Draw the histogram
-    img=BytesIO()
-    plt.savefig(img, format='png')
-    plt.close()
+                # Draw the histogram
+                img=BytesIO()
+                plt.savefig(img, format='png')
+                plt.close()
             
-    # Set see pointer to beginning of the file
-    img.flush()
-    img.seek(0)
-    return(img)       
-
-
+                # Set see pointer to beginning of the file
+                img.flush()
+                img.seek(0)
+                done=True
+                
+        except filelock.Timeout():
+            pass
+        
+    return(img)
+    
 
 def drawHistoKeywords(session_id):
 
+    global lock
+    
     # Get kept tweets associated to sessions
     tweet_ids=[]
     
@@ -135,20 +151,33 @@ def drawHistoKeywords(session_id):
         frequencies.append(tuple[1])
 
     y_pos = np.arange(len(words))
-    plt.barh(y_pos, frequencies, alpha=1, align="center")
-    plt.yticks(y_pos, words, size="x-small")
-    plt.xlabel("Nombre d'occurrences")
-    plt.title("Fréquence des mots clés")
+
+    done=False
+    while not done:
+        try:
+            with lock.acquire(timeout = 10):
+ 
+                plt.barh(y_pos, frequencies, alpha=1, align="center")
+                plt.yticks(y_pos, words, size="x-small")
+                plt.xlabel("Nombre d'occurrences")
+                plt.title("Fréquence des mots clés")
     
-    # Draw the histogram
-    img=BytesIO()
-    plt.savefig(img, format='png')
-    plt.close()
+                # Draw the histogram
+                img=BytesIO()
+                plt.savefig(img, format='png')
+                plt.close()
             
-    # Set see pointer to beginning of the file
-    img.flush()
-    img.seek(0)
+                # Set see pointer to beginning of the file
+                img.flush()
+                img.seek(0)
+
+                done=True
+        except filelock.Timeout():
+            pass
+              
     return(img)
+
+    
 
 def displayTweetsStats(session_id):
 
