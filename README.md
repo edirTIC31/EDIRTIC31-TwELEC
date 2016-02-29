@@ -10,7 +10,7 @@ Note : cette branche de TwELEC est en cours de développement. Si vous cherchez 
 
 ## Pré-requis
 
-Python 3.x avec les modules *Twitter*, *Flask*, *matplotlib* et *pytz*, les autres modules sont normalement en standard avec Python 3.x (*sqlite3*, *json*,...)
+Python 3.x avec les modules *Twitter*, *Flask*, *matplotlib*, *filelock* et *pytz*, les autres modules sont normalement en standard avec Python 3.x (*sqlite3*, *json*,...)
 
 Note : *httplib2* qui est utilisé par Flask peut faire face à un problème de certificats expirés. Le *github* dédié à *httplib2* possède des versions à jour.
 Note(2) : sous *Debian/Jessie* l'installation par *pip* de *matplotlib* est un peu délicate et demande un certain nombre de dépendance qu'il faut installer avec *apt* : *libfreetype6-dev* et *libpng12-dev*. 
