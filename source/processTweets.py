@@ -113,7 +113,7 @@ def processTweets(session_id) :
         while row != None:
             # Compute the tweet score
             score=scoreTweet(json.loads(row[1]),session)
-            if score!=0 or twelec_globals.keep_zero_score:
+            if score!=0 or twelec_globals.keep_zero_score==False:
                 # Insert them in the kept table
                 cur_update.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
             # And switch the state to 'processed new' in the Fetched tweet table

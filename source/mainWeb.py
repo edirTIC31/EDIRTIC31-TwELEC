@@ -51,7 +51,7 @@ def TwELECDisplayTweetsStats():
 @app.route('/fig/HistoKeywords/<session_id>')
 def figHistoKeywords(session_id):
     img=displayTweetsStats.drawHistoKeywords(session_id)
-    response = make_response(send_file(img, mimetype='image/png'))
+    response = make_response(send_file(img, mimetype='image/png',attachment_filename='hkw.png'))
     response.headers['Pragma-directive'] = 'no-cache'
     response.headers['Cache-directive'] = 'no-cache'
     response.headers['Cache-control'] = 'no-cache'
@@ -62,7 +62,7 @@ def figHistoKeywords(session_id):
 @app.route('/fig/HistoTweetAge/<session_id>')
 def figHistoTweetAge(session_id):
     img=displayTweetsStats.drawHistoTweetAge(session_id)
-    response = make_response(send_file(img, mimetype='image/png'))
+    response = make_response(send_file(img, mimetype='image/png',attachment_filename='hta.png'))
     response.headers['Pragma-directive'] = 'no-cache'
     response.headers['Cache-directive'] = 'no-cache'
     response.headers['Cache-control'] = 'no-cache'

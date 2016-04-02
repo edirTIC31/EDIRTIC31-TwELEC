@@ -79,6 +79,9 @@ def drawHistoTweetAge(session_id):
     done=False
     while not done:
         try:
+            # A file-based lock is used to prevent
+            # multi-threaded access to matplot lib
+            # (which is not mthread-safe)
             with lock.acquire(timeout = 10):
         
                 y_pos = np.arange(len(bins_legend))
@@ -155,11 +158,14 @@ def drawHistoKeywords(session_id):
     done=False
     while not done:
         try:
+            # A file-based lock is used to prevent
+            # multi-threaded access to matplot lib
+            # (which is not mthread-safe)           
             with lock.acquire(timeout = 10):
  
                 plt.barh(y_pos, frequencies, alpha=1, align="center")
                 plt.yticks(y_pos, words, size="x-small")
-                plt.xlabel("Nombre d'occurrences")
+                plt.xlabel("Nombre de tweets avec ce mot clé")
                 plt.title("Fréquence des mots clés")
     
                 # Draw the histogram
