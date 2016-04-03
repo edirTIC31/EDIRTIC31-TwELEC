@@ -55,11 +55,12 @@ def fetchTweets(a_token,
         # Retrieve session data
         session=sessions.getSessionByID(session_id)
 
-        mandatory_keywords=json.loads(session[2])
-        optional_keywords=json.loads(session[3])
-        hours_before=session[4]
-        language_string=json.loads(session[5])
-        max_search_hits=session[6]
+        mandatory_keywords=json.loads(session['MKeyw'])
+        optional_keywords=json.loads(session['OKeyw'])
+        banned_keywords=json.loads(session['BKeyw'])
+        hours_before=session['Since']
+        language_string=json.loads(session['Lang'])
+        max_search_hits=session['MaxHits']
          
     # No search hits so far, starting from
     # the "first" tweet

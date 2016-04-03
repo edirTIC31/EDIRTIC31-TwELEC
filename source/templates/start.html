@@ -6,6 +6,7 @@
 
 function validateForm() {
 
+  var u=document.forms["start_form"]["bkw"];
   var v=document.forms["start_form"]["shts"];
   var w=document.forms["start_form"]["mdp"];
   var x=document.forms["start_form"]["mkw"];
@@ -28,6 +29,9 @@ function validateForm() {
 
   if( y != null && y.value !='' )
     y.value = y.value.replace(/\s{2,}/g, ' ');
+
+  if( u != null && u.value !='' )
+    u.value = u.value.replace(/\s{2,}/g, ' ');
 
   if( z != null && z.value !='' ) {
     z.value = z.value.replace(/\s{2,}/g, ' ');
@@ -89,6 +93,11 @@ requêtes ... merci de ne pas abuser. <BR>
   <tr>
   <td>Mots cl&eacute; optionnels :</rd>
   <td><input type="text" name="okw"></td>
+  </tr>
+
+  <tr>
+  <td>Mots cl&eacute; à bannir :</rd>
+  <td><input type="text" name="bkw"></td>
   </tr>
 
   <tr>

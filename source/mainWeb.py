@@ -127,6 +127,13 @@ def TwELEC():
         except KeyError:
            optional_keywords=[]
 
+        # Parsing of the banned keywords
+        # ** TODO ** Rajouter la suppresion des espaces excedentaires
+        try:
+           banned_keywords=request.form['bkw'].split(" ")
+        except KeyError:
+           banned_keywords=[]
+
         # Parsing of the depth of search (in hours past now)
         # -1 means unspecified
         try:
@@ -168,6 +175,7 @@ def TwELEC():
     session_id=sessions.createSession(session_name,
                             mandatory_keywords,
                             optional_keywords,
+                            banned_keywords,
                             hours_before,
                             twelec_globals.language_string,
                             max_search_hits)

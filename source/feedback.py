@@ -44,9 +44,14 @@ def splitTweetInWords(tweet_text):
 
         if keep and tweet_word[0] in ('\"','\'','\«','\»','(',')','[',']','{','}'):
             tweet_word=tweet_word[1:]
+            if tweet_word=="":
+                keep=False
 
         if keep and tweet_word[-1] in ('\"','\'','\«','\»','(',')','[',']','{','}'):
             tweet_word=tweet_word[:-1]
+            if tweet_word=="":
+                keep=False
+
            
         if keep and len(tweet_word) < 3:
             keep=False
@@ -69,7 +74,7 @@ def computeNewKeywords(session_id,tweet_words,frequency_threshold):
     with lite.connect("twitter.db") as con:
 
         cur=con.cursor()
-        cur.execute("SELECT Mkeyw FROM SESSIONS WHERE rowid=?",(session_id,))
+        cur.execute("SELECT MKeyw FROM SESSIONS WHERE rowid=?",(session_id,))
         row=cur.fetchone()
         old_keywords=json.loads(row[0])
 
@@ -160,14 +165,15 @@ def feedback(request):
         hint_checkbox=""
         hint_keywords=[]
  
-    # Get the old mandatory & optional keywords
+    # Get the old mandatory, optional & banned keywords
     with lite.connect("twitter.db") as con:
 
         cur=con.cursor()
-        cur.execute("SELECT Mkeyw,OKeyw FROM SESSIONS WHERE rowid=?",(session_id,))
+        cur.execute("SELECT MKeyw,OKeyw,BKeyw FROM SESSIONS WHERE rowid=?",(session_id,))
         row=cur.fetchone()
         old_mkeywords=json.loads(row[0])
         old_okeywords=json.loads(row[1])
+        old_bkeywords=json.loads(row[2])
 
         # Replace mandatory keywords with the ones from the form
         try:
@@ -185,9 +191,19 @@ def feedback(request):
         except KeyError:
             new_okeywords=old_okeywords
         new_okeywords=new_okeywords+hint_keywords
+
+
+        # Replace the banned keywords - if any
+        try:
+            new_bkeywords=request.form['bkw'].split(" ")
+        except KeyError:
+            new_bkeywords=bld_okeywords
+
             
         # Update session data
-        cur.execute("UPDATE Sessions SET Mkeyw=?,Okeyw=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),session_id))
+        cur.execute("UPDATE Sessions SET MKeyw=?,OKeyw=?,BKeyw=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),json.dumps(new_bkeywords),session_id))
+
+
 
     # Re run tweet search    
     fetchTweets.fetchTweets(twelec_globals.a_token,
@@ -195,8 +211,16 @@ def feedback(request):
                             twelec_globals.c_key,
                             twelec_globals.c_secret,
                             session_id)
-    
+
+    #with lite.connect("twitter.db") as con:
+        # Re tag all processed tweets as un processed (except the banned tweets)
+        # This gives the opportunity to ban tweets 
+        #cur=con.cursor()
+        #cur.execute("UPDATE FetchedTweets SET State=? WHERE Session=? AND State=?",(twelec_globals.tweet_states['unprocessed'],session_id,twelec_globals.tweet_states['processed']))    
+        #cur.execute("DELETE FROM KeptTweets WHERE Session=?",(session_id,))
+
     # Do scoring
+    processTweets.rescoreKeptTweets(session_id)
     processTweets.processTweets(session_id)
 
     # and display
