@@ -53,6 +53,7 @@ La page de démarrage demande de founir :
   * Un mot de passe ... (/no comment/)
   * Des mots clés obligatoires (séparés par des espaces). Ils seront utilisés pour rechercher des Tweets. **Attention** : lorsque Twitter ne trouve pas beaucoup de tweets liés à ces mots clés, il n'honore pas toulours complètement la liste. Ce champ ne peut être laissé vide
   * Des mots clés optionnels : ils sont ... optionnels 
+  * Des mots clés à bannir : les tweets contenant ces mots clés seront ignorés
   * Le nombre d'heures à remonter dans le passé : Twitter limite cette capacité à environ 1 semaines (168 heures). Ceci étant, en mettant '-1', vous demandez à Twitter d'aller aussi loin que possible dans le passé. Une remarque en passant : quand on utilise la fonction *search* de l'application officielle Twitter, il n'y a pas cette limite.
   * Le nombre de tweets à trouver
 
