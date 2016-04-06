@@ -7,17 +7,28 @@
 
     <form name="feedback_form" action="/feedback" method="post">
       
-      <H1>Résultats</H1>
+ 	 {% if since_field != -1 %}
+	    <H1>Résultats sur une période de {{since_field}} heures</H1>
+	 {% else %}
+        <H1>Résultats</H1>
+     {% endif %}
       <TABLE>
 	<TR>
 	  <TD>
 	    Recherche des mots-clé
 	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{mkw_field}}"> (obligatoires),
 	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{okw_field}}"> (optionnels) et
-	    <INPUT TYPE=TEXT NAME="bkw" VALUE="{{bkw_field}}"> (bannis)  
-	    {% if since_field != -1 %}
-	    sur une période de {{since_field}} heures
-	    {% endif %}
+	    <INPUT TYPE=TEXT NAME="bkw" VALUE="{{bkw_field}}"> (bannis) 
+      </TD>
+    </TR>
+      <TD>
+	    Affichage des scores=0 
+	    {% if display_zero==1 %}
+	    <INPUT TYPE=CHECKBOX NAME="dz" CHECKED>
+	    {% else %}
+	    <INPUT TYPE=CHECKBOX NAME="dz">
+	    {% endif %}  
+
 	    {% if tweets_set != [] %}
 	      <A HREF="/displayTweetsStats?session_id={{session_id}}" TARGET=_new>statistiques</A>
 	    {% endif %}

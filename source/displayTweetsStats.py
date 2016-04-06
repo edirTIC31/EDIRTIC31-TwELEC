@@ -13,6 +13,7 @@ from flask import render_template
 import filelock
 
 import feedback
+import sessions
 
 lock = filelock.FileLock("mplib.lock")
 
@@ -22,6 +23,7 @@ def drawHistoTweetAge(session_id):
     
     # Get kept tweets associated to sessions
     tweet_ids=[]
+    session=sessions.getSessionByID(session_id)
     
     # Browse all kept tweets and check wether
     # some are marked as to ban or faved
@@ -30,7 +32,10 @@ def drawHistoTweetAge(session_id):
         cur=con.cursor()
         
         # Retrieve all tweets related to that session that are kept
-        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        if session['DisplayZero']==1:
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        else:
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score!=0",(session_id,))
 
         row=cur.fetchone()
         while row != None:
@@ -112,6 +117,7 @@ def drawHistoKeywords(session_id):
     
     # Get kept tweets associated to sessions
     tweet_ids=[]
+    session=sessions.getSessionByID(session_id)
     
     # Browse all kept tweets and check wether
     # some are marked as to ban or faved
@@ -120,7 +126,11 @@ def drawHistoKeywords(session_id):
         cur=con.cursor()
         
         # Retrieve all tweets related to that session that are kept
-        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        if session['DisplayZero']==1:
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        else:
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score!=0",(session_id,))
+
 
         row=cur.fetchone()
         while row != None:

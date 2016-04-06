@@ -8,6 +8,7 @@ import displayTweets
 import processTweets
 import fetchTweets
 import twelec_globals
+import sessions
 
 def splitTweetInWords(tweet_text):
 
@@ -114,6 +115,16 @@ def suggestTweetKeywords(session_id,tweet_ids,frequency_threshold):
 def feedback(request):
 
     session_id=int(request.form['session_id'])
+    session=sessions.getSessionByID(session_id)
+
+    try:
+        if request.form['dz']=="on" :
+            display_zero=1
+        else:
+            display_zero=0
+    except KeyError:
+        display_zero=0
+        
 
     faved_tweet_ids=[]
     hint_tweet_ids=[]
@@ -126,7 +137,10 @@ def feedback(request):
         cur_update=con.cursor()
         
         # Retrieve all tweets related to that session that are kept
-        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        if display_zero==1 :
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+        else :
+            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? AND Score!=0",(session_id,))
 
         row=cur.fetchone()
         while row != None:
@@ -201,7 +215,7 @@ def feedback(request):
 
             
         # Update session data
-        cur.execute("UPDATE Sessions SET MKeyw=?,OKeyw=?,BKeyw=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),json.dumps(new_bkeywords),session_id))
+        cur.execute("UPDATE Sessions SET MKeyw=?,OKeyw=?,BKeyw=?,DisplayZero=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),json.dumps(new_bkeywords),display_zero,session_id))
 
 
 

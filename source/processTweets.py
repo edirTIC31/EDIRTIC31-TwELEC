@@ -121,10 +121,9 @@ def rescoreKeptTweets(session_id) :
         while row != None:
             tweet=tweets.getTweetByID(row[0],session_id)
             score=scoreTweet(json.loads(tweet[2]),session)
-            if score !=0 :
-                cur_kt_u.execute("UPDATE KeptTweets SET Score= ? WHERE Session=? AND TwID=?",(score,session_id,row[0]))
-            else :
-                cur_kt_u.execute("DELETE FROM KeptTweets WHERE Session=? AND TwID=?",(session_id,row[0]))
+
+            cur_kt_u.execute("UPDATE KeptTweets SET Score= ? WHERE Session=? AND TwID=?",(score,session_id,row[0]))
+
             row=cur_kt_r.fetchone()
 
 ## ** TODO ** handle error case
@@ -144,10 +143,7 @@ def processTweets(session_id) :
         while row != None:
             # Compute the tweet score
             score=scoreTweet(json.loads(row[1]),session)
-        
-            if score!=0 or twelec_globals.keep_zero_score==True:
-                # Insert them in the kept table
-                cur_update.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
+            cur_update.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,row[0],score))
                 
             # And switch the state to 'processed new' in the Fetched tweet table
             cur_update.execute("UPDATE FetchedTweets SET State=? WHERE TwID=?",(twelec_globals.tweet_states['processed_new'],row[0]))

@@ -52,6 +52,8 @@ def displayToStr(session_id):
 
 
         since_field=session['Since']
+
+        display_zero=session['DisplayZero']
             
         # Retrieve all tweets related to that session
         cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
@@ -91,7 +93,8 @@ def displayToStr(session_id):
             if len(medias)>0:
                 tweet_elm['medias']=medias
 
-            tweets_set.append(tweet_elm)
+            if tweet_elm['score']!=0 or display_zero==1:
+                tweets_set.append(tweet_elm)
 
             row=cur.fetchone()
 
@@ -100,4 +103,4 @@ def displayToStr(session_id):
                                                                                     twelec_globals.tweet_states['processed_new']))
         
         # And we're done
-        return(render_template("view_tweets.html",session_id=session_id,since_field=since_field,mkw_field=mkw_field,okw_field=okw_field,bkw_field=bkw_field,tweets_set=tweets_set))
+        return(render_template("view_tweets.html",session_id=session_id,since_field=since_field,mkw_field=mkw_field,okw_field=okw_field,bkw_field=bkw_field,display_zero=display_zero,tweets_set=tweets_set))

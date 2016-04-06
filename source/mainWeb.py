@@ -178,7 +178,8 @@ def TwELEC():
                             banned_keywords,
                             hours_before,
                             twelec_globals.language_string,
-                            max_search_hits)
+                            max_search_hits,
+                            twelec_globals.keep_zero_score)
     if session_id==-1 :
         return(render_template("error.html",cause="Erreur de base de données (création de session)"))        
 

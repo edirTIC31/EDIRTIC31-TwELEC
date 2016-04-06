@@ -16,14 +16,15 @@ def createSession(session_name,
                   banned_keywords,
                   hours_before,
                   language_string,
-                  max_hits):
+                  max_hits,
+                  display_zero):
 
         # Connect to the DB
     with lite.connect('twitter.db') as con:
         cur=con.cursor()       
 
         # Create a new session
-        cur.execute("INSERT INTO Sessions VALUES(?,?,?,?,?,?,?,?)",
+        cur.execute("INSERT INTO Sessions VALUES(?,?,?,?,?,?,?,?,?)",
                     (json.dumps(session_name),
                     twelec_globals.session_states['running'],
                     json.dumps(mandatory_keywords),
@@ -31,7 +32,8 @@ def createSession(session_name,
                     json.dumps(banned_keywords),
                     hours_before,
                     json.dumps(language_string),
-                    max_hits))
+                    max_hits,
+                    display_zero))
 
         # Get the ID of the session added as it
         # will be used later for adding tweets
