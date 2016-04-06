@@ -53,14 +53,16 @@ La page de démarrage demande de founir :
   * Un mot de passe ... (/no comment/)
   * Des mots clés obligatoires (séparés par des espaces). Ils seront utilisés pour rechercher des Tweets. **Attention** : lorsque Twitter ne trouve pas beaucoup de tweets liés à ces mots clés, il n'honore pas toulours complètement la liste. Ce champ ne peut être laissé vide
   * Des mots clés optionnels : ils sont ... optionnels 
-  * Des mots clés à bannir : les tweets contenant ces mots clés seront ignorés
+  * Des mots clés à bannir : les tweets contenant ces mots clés auront un score forcé à 0
   * Le nombre d'heures à remonter dans le passé : Twitter limite cette capacité à environ 1 semaines (168 heures). Ceci étant, en mettant '-1', vous demandez à Twitter d'aller aussi loin que possible dans le passé. Une remarque en passant : quand on utilise la fonction *search* de l'application officielle Twitter, il n'y a pas cette limite.
   * Le nombre de tweets à trouver
 
 ### L'affichage des résultats
 
 La page des résultats est structurée comme suit :
-  * Une ligne qui rappelle les mots clés utilisés et - si c'était précisé - le nombre d'heures à remonter dans le passé. A noter que les mots clés peuvent être modifiés. Un lien est fourni vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés).
+  * Une ligne qui rappelle les mots clés utilisés. A noter que les mots clés peuvent être modifiés.
+  * Un case à cocher qui permet d'afficher ou non les tweets ayant un score de 0. Par défaut, ces tweets ne sont pas affichés.
+  * Un lien est fourni vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés).
   * Une ligne avec un bouton *rafraîchir* et une case *coup de pouce* décrite ci-dessous.
   * Un tableau avec une ligne par tweet trouvé. Les informations suivantes sont affichées :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
