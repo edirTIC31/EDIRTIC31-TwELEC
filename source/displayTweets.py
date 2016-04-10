@@ -101,6 +101,22 @@ def displayToStr(session_id):
         # Switch tweets from the Kept table from 'processed_new' to 'processed'
         cur.execute("UPDATE FetchedTweets SET State=? WHERE Session=? and State=?",(twelec_globals.tweet_states['processed'],session_id,\
                                                                                     twelec_globals.tweet_states['processed_new']))
-        
+        display_params={}
+        display_params['session_id']=session_id
+        display_params['since_field']=since_field
+        display_params['mkw_field']=mkw_field
+        display_params['okw_field']=okw_field
+        display_params['bkw_field']=bkw_field
+        display_params['display_zero']=display_zero
+        display_params['tweets_set']=tweets_set
+
+        cur.execute("SELECT * FROM FetchedTweets WHERE Session=?",(session_id,))
+        display_params['num_fetched']=len(cur.fetchall())
+
+        cur.execute("SELECT * FROM KeptTweets WHERE Session=?",(session_id,))
+        display_params['num_kept']=len(cur.fetchall())
+
+        display_params['num_displayed']=len(tweets_set)        
+
         # And we're done
-        return(render_template("view_tweets.html",session_id=session_id,since_field=since_field,mkw_field=mkw_field,okw_field=okw_field,bkw_field=bkw_field,display_zero=display_zero,tweets_set=tweets_set))
+        return(render_template("view_tweets.html",display_params=display_params))

@@ -7,8 +7,8 @@
 
     <form name="feedback_form" action="/feedback" method="post">
       
- 	 {% if since_field != -1 %}
-	    <H1>Résultats sur une période de {{since_field}} heures</H1>
+ 	 {% if display_params['since_field'] != -1 %}
+	    <H1>Résultats sur une période de {{display_params['since_field']}} heures</H1>
 	 {% else %}
         <H1>Résultats</H1>
      {% endif %}
@@ -16,29 +16,31 @@
 	<TR>
 	  <TD>
 	    Recherche des mots-clé
-	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{mkw_field}}"> (obligatoires),
-	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{okw_field}}"> (optionnels) et
-	    <INPUT TYPE=TEXT NAME="bkw" VALUE="{{bkw_field}}"> (bannis) 
+	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{display_params['mkw_field']}}"> (obligatoires),
+	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{display_params['okw_field']}}"> (optionnels) et
+	    <INPUT TYPE=TEXT NAME="bkw" VALUE="{{display_params['bkw_field']}}"> (bannis) 
       </TD>
     </TR>
       <TD>
-	    Affichage des scores=0 
-	    {% if display_zero==1 %}
+	    Affichage des tweets à scores nuls 
+	    {% if display_params['display_zero']==1 %}
 	    <INPUT TYPE=CHECKBOX NAME="dz" CHECKED>
 	    {% else %}
 	    <INPUT TYPE=CHECKBOX NAME="dz">
 	    {% endif %}  
 
-	    {% if tweets_set != [] %}
-	      <A HREF="/displayTweetsStats?session_id={{session_id}}" TARGET=_new>statistiques</A>
+	    <INPUT TYPE=HIDDEN NAME="session_id" VALUE="{{display_params['session_id']}}">Coup de pouce <input type="checkbox" name="cdp">
+	    <INPUT type=SUBMIT value="rafraichir">
+	    {% if display_params['tweets_set'] != [] %}
+	      <A HREF="/displayTweetsStats?session_id={{display_params['session_id']}}" TARGET=_new>statistiques</A>
 	    {% endif %}
 	  </TD>
 	</TR>
-	<TR ALIGN=CENTER>
-	  <TD>
-	    <INPUT TYPE=HIDDEN NAME="session_id" VALUE="{{session_id}}">Coup de pouce <input type="checkbox" name="cdp">
-	    <INPUT type=SUBMIT value="rafraichir"><BR><BR>
-	  </TD>
+	<TR>
+	<TD>
+	    Tweets trouvés : {{display_params['num_fetched']}} / Tweets gardés : {{display_params['num_kept']}} / Tweets affichés : {{display_params['num_displayed']}}
+	    <BR><BR>
+	</TD>
 	</TR>
       </TABLE>
       <table style="width:100%" border=1>
@@ -52,7 +54,7 @@
 	  <th>Bannir</th>
 	</TR>
 	
-	{% for tweet_elm in tweets_set %}
+	{% for tweet_elm in display_params['tweets_set'] %}
 	
 	<TR>
 	  <td>
@@ -100,6 +102,8 @@
 	
       </table>
     </form>
+
+
   </body>
 </html>
     

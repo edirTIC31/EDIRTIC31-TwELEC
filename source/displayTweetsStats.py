@@ -4,18 +4,20 @@ from datetime import *
 import pytz
 from collections import Counter
 from io import BytesIO
+
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
 plt.rcdefaults()
+
 import numpy as np
+
 from flask import render_template
-import filelock
 
 import feedback
 import sessions
 
-lock = filelock.FileLock("mplib.lock")
+
 
 def drawHistoTweetAge(session_id):
 

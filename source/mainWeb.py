@@ -11,6 +11,9 @@ from flask import Flask, render_template, request, send_file, make_response
 from random import choice
 from string import ascii_uppercase
 
+import filelock
+lock = filelock.FileLock("mplib.lock")
+
 #####################################################
 
 
