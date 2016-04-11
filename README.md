@@ -62,7 +62,7 @@ La page de démarrage demande de founir :
 La page des résultats est structurée comme suit :
   * Une ligne qui rappelle les mots clés utilisés. A noter que les mots clés peuvent être modifiés.
   * Un case à cocher qui permet d'afficher ou non les tweets ayant un score de 0. Par défaut, ces tweets ne sont pas affichés.
-  * Une case à cocher qui permet de demander un "coup de pouce" lors du rafraîchissement des résultats (cf plus bas).
+  * Une case à cocher qui permet de demander un *coup de pouce* lors du rafraîchissement des résultats (cf plus bas).
   * Un bouton pour rafraîchir les résultats.
   * Un lien vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés et un autre histogramme sur l'âge des tweets trouvés.
   * Des informations sur le nombre de tweets trouvés, conservés et affichés.
@@ -76,7 +76,7 @@ La page des résultats est structurée comme suit :
 
 *Bannir un tweet* : celui-ci disparaît de la liste (et dans une même session, il ne va plus réapparaître).
 
-*Aimer un tweet* : le contenu du tweet 'aimés' est utilisé pour "deviner" des mots clés pertinents ... et la recherche est mise à jour avec ces nouveaux mots clés lors qu'on clique sur le bouton *rafraîchir* (bouton à coté de la liste des mots clés). 
+*Aimer un tweet* : les contenus des tweets 'aimés' sont utilisés pour "deviner" des mots clés pertinents ... et la recherche est mise à jour avec ces nouveaux mots clés lors qu'on clique sur le bouton *rafraîchir* (bouton à coté de la liste des mots clés). 
 
 Tous les autres tweets qui ne sont ni bannis, ni aimés sont conservés tels quels. 
 
