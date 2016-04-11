@@ -62,8 +62,10 @@ La page de démarrage demande de founir :
 La page des résultats est structurée comme suit :
   * Une ligne qui rappelle les mots clés utilisés. A noter que les mots clés peuvent être modifiés.
   * Un case à cocher qui permet d'afficher ou non les tweets ayant un score de 0. Par défaut, ces tweets ne sont pas affichés.
-  * Un lien est fourni vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés).
-  * Une ligne avec un bouton *rafraîchir* et une case *coup de pouce* décrite ci-dessous.
+  * Une case à cocher qui permet de demander un "coup de pouce" lors du rafraîchissement des résultats (cf plus bas).
+  * Un bouton pour rafraîchir les résultats.
+  * Un lien vers une page qui montre les statistiques des tweets. Pour le moment, ces statistiques se résument à un histogramme de fréquence des mots clés et un autre histogramme sur l'âge des tweets trouvés.
+  * Des informations sur le nombre de tweets trouvés, conservés et affichés.
   * Un tableau avec une ligne par tweet trouvé. Les informations suivantes sont affichées :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
     2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
