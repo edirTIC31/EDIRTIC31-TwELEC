@@ -11,8 +11,7 @@ from flask import Flask, render_template, request, send_file, make_response
 from random import choice
 from string import ascii_uppercase
 
-import filelock
-lock = filelock.FileLock("mplib.lock")
+
 
 #####################################################
 
@@ -50,29 +49,6 @@ def TwELECDisplayTweetsStats():
         return(render_template("error.html",cause="Paramètres GET mal formatés"))
 
     return(displayTweetsStats.displayTweetsStats(session_id))
-
-@app.route('/fig/HistoKeywords/<session_id>')
-def figHistoKeywords(session_id):
-    img=displayTweetsStats.drawHistoKeywords(session_id)
-    response = make_response(send_file(img, mimetype='image/png',attachment_filename='hkw.png'))
-    response.headers['Pragma-directive'] = 'no-cache'
-    response.headers['Cache-directive'] = 'no-cache'
-    response.headers['Cache-control'] = 'no-cache'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
-
-@app.route('/fig/HistoTweetAge/<session_id>')
-def figHistoTweetAge(session_id):
-    img=displayTweetsStats.drawHistoTweetAge(session_id)
-    response = make_response(send_file(img, mimetype='image/png',attachment_filename='hta.png'))
-    response.headers['Pragma-directive'] = 'no-cache'
-    response.headers['Cache-directive'] = 'no-cache'
-    response.headers['Cache-control'] = 'no-cache'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
-    return response
-
 
 @app.route('/sessions')
 def TwELECsessions():

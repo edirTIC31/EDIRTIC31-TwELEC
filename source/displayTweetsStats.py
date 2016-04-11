@@ -14,14 +14,17 @@ import numpy as np
 
 from flask import render_template
 
+import filelock
+
 import feedback
 import sessions
+from mpflock import *
 
 
 
 def drawHistoTweetAge(session_id):
 
-    global lock
+    global mplib_lock
     
     # Get kept tweets associated to sessions
     tweet_ids=[]
@@ -89,7 +92,7 @@ def drawHistoTweetAge(session_id):
             # A file-based lock is used to prevent
             # multi-threaded access to matplot lib
             # (which is not mthread-safe)
-            with lock.acquire(timeout = 10):
+            with mplib_lock.acquire(timeout = 10):
         
                 y_pos = np.arange(len(bins_legend))
                 plt.barh(y_pos, ages, alpha=1,align="center")
@@ -98,24 +101,24 @@ def drawHistoTweetAge(session_id):
                 plt.title("Age (en heures) des tweets")
     
                 # Draw the histogram
-                img=BytesIO()
-                plt.savefig(img, format='png')
+                #img=BytesIO()
+                plt.savefig('static/hta_'+str(session_id)+'.png', format='png')
                 plt.close()
             
                 # Set see pointer to beginning of the file
-                img.flush()
-                img.seek(0)
+                #img.flush()
+                #img.seek(0)
                 done=True
                 
-        except filelock.Timeout():
+        except filelock.Timeout:
             pass
         
-    return(img)
+    return
     
 
 def drawHistoKeywords(session_id):
 
-    global lock
+    global mplib_lock
     
     # Get kept tweets associated to sessions
     tweet_ids=[]
@@ -173,7 +176,7 @@ def drawHistoKeywords(session_id):
             # A file-based lock is used to prevent
             # multi-threaded access to matplot lib
             # (which is not mthread-safe)           
-            with lock.acquire(timeout = 10):
+            with mplib_lock.acquire(timeout = 10):
  
                 plt.barh(y_pos, frequencies, alpha=1, align="center")
                 plt.yticks(y_pos, words, size="x-small")
@@ -181,22 +184,24 @@ def drawHistoKeywords(session_id):
                 plt.title("Fréquence des mots clés")
     
                 # Draw the histogram
-                img=BytesIO()
-                plt.savefig(img, format='png')
+                #img=BytesIO()
+                plt.savefig('static/htk_'+str(session_id)+'.png', format='png')
                 plt.close()
             
                 # Set see pointer to beginning of the file
-                img.flush()
-                img.seek(0)
+                #img.flush()
+                #img.seek(0)
 
                 done=True
-        except filelock.Timeout():
+        except filelock.Timeout:
             pass
               
-    return(img)
+    return
 
     
 
 def displayTweetsStats(session_id):
 
+    drawHistoTweetAge(session_id)
+    drawHistoKeywords(session_id)
     return(render_template("view_tweets_stats.html",session_id=session_id))

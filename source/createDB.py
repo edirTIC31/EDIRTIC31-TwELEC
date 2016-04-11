@@ -1,5 +1,6 @@
 import sqlite3 as lite
 import sys
+import os
 import twelec_globals
 
 def createDB():
@@ -21,6 +22,8 @@ def createDB():
         cur.execute("DROP TABLE IF EXISTS KeptTweets")
         cur.execute("CREATE TABLE KeptTweets(Session INTEGER, TwID INTEGER, Score INTEGER)")
 
-  
     if con:
         con.close()
+
+    # Clean image files
+    os.system("rm static/hta_*.png static/htk_*.png")
