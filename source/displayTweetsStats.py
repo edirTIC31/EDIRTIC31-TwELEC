@@ -12,9 +12,11 @@ plt.rcdefaults()
 
 import numpy as np
 
-from flask import render_template
+from flask import render_template, make_response
 
 import filelock
+
+import os
 
 import feedback
 import sessions
@@ -204,4 +206,5 @@ def displayTweetsStats(session_id):
 
     drawHistoTweetAge(session_id)
     drawHistoKeywords(session_id)
-    return(render_template("view_tweets_stats.html",session_id=session_id))
+    return(render_template("view_tweets_stats.html",session_id=session_id,unique_token=str(datetime.now())))
+
