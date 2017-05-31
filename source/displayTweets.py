@@ -53,10 +53,10 @@ def displayToStr(session_id):
 
         since_field=session['Since']
 
-        display_zero=session['DisplayZero']
+        minimum_score=session['MinimumScore']
             
         # Retrieve all tweets related to that session
-        cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC",(session_id,))
+        cur.execute("SELECT TwId, Score FROM KeptTweets WHERE Session=? ORDER BY Score DESC LIMIT ?",(session_id,session['MaxHits']))
 
         tweets_set=[]
         row=cur.fetchone()
@@ -93,7 +93,7 @@ def displayToStr(session_id):
             if len(medias)>0:
                 tweet_elm['medias']=medias
 
-            if tweet_elm['score']!=0 or display_zero==1:
+            if tweet_elm['score']>=minimum_score:
                 tweets_set.append(tweet_elm)
 
             row=cur.fetchone()
@@ -107,7 +107,7 @@ def displayToStr(session_id):
         display_params['mkw_field']=mkw_field
         display_params['okw_field']=okw_field
         display_params['bkw_field']=bkw_field
-        display_params['display_zero']=display_zero
+        display_params['minimum_score']=minimum_score
         display_params['tweets_set']=tweets_set
 
         cur.execute("SELECT * FROM FetchedTweets WHERE Session=?",(session_id,))

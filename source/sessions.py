@@ -17,7 +17,7 @@ def createSession(session_name,
                   hours_before,
                   language_string,
                   max_hits,
-                  display_zero):
+                  minimum_score):
 
         # Connect to the DB
     with lite.connect('twitter.db') as con:
@@ -33,7 +33,7 @@ def createSession(session_name,
                     hours_before,
                     json.dumps(language_string),
                     max_hits,
-                    display_zero))
+                    minimum_score))
 
         # Get the ID of the session added as it
         # will be used later for adding tweets

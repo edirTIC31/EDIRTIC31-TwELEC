@@ -39,10 +39,7 @@ def drawHistoTweetAge(session_id):
         cur=con.cursor()
         
         # Retrieve all tweets related to that session that are kept
-        if session['DisplayZero']==1:
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
-        else:
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score!=0",(session_id,))
+        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score>=?",(session_id,session['MinimumScore']))
 
         row=cur.fetchone()
         while row != None:
@@ -133,10 +130,7 @@ def drawHistoKeywords(session_id):
         cur=con.cursor()
         
         # Retrieve all tweets related to that session that are kept
-        if session['DisplayZero']==1:
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
-        else:
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score!=0",(session_id,))
+        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Score>=?",(session_id,session['MinimumScore']))
 
 
         row=cur.fetchone()

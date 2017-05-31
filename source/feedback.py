@@ -118,12 +118,9 @@ def feedback(request):
     session=sessions.getSessionByID(session_id)
 
     try:
-        if request.form['dz']=="on" :
-            display_zero=1
-        else:
-            display_zero=0
+        minimum_score=request.form['minscore']
     except KeyError:
-        display_zero=0
+        minimum_score=0
         
 
     faved_tweet_ids=[]
@@ -136,11 +133,9 @@ def feedback(request):
         cur=con.cursor()
         cur_update=con.cursor()
         
-        # Retrieve all tweets related to that session that are kept
-        if display_zero==1 :
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
-        else :
-            cur.execute("SELECT TwId FROM KeptTweets WHERE Session=? AND Score!=0",(session_id,))
+
+        cur.execute("SELECT TwId FROM KeptTweets WHERE Session=?",(session_id,))
+
 
         row=cur.fetchone()
         while row != None:
@@ -215,27 +210,17 @@ def feedback(request):
 
             
         # Update session data
-        cur.execute("UPDATE Sessions SET MKeyw=?,OKeyw=?,BKeyw=?,DisplayZero=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),json.dumps(new_bkeywords),display_zero,session_id))
+        cur.execute("UPDATE Sessions SET MKeyw=?,OKeyw=?,BKeyw=?,MinimumScore=? WHERE rowid=?",(json.dumps(new_mkeywords),json.dumps(new_okeywords),json.dumps(new_bkeywords),minimum_score,session_id))
 
 
 
     # Re run tweet search    
-    fetchTweets.fetchTweets(twelec_globals.a_token,
+    processTweets.rescoreKeptTweets(session_id)
+    fetchTweets.fetchAndProcessTweets(twelec_globals.a_token,
                             twelec_globals.a_secret,
                             twelec_globals.c_key,
                             twelec_globals.c_secret,
                             session_id)
-
-    #with lite.connect("twitter.db") as con:
-        # Re tag all processed tweets as un processed (except the banned tweets)
-        # This gives the opportunity to ban tweets 
-        #cur=con.cursor()
-        #cur.execute("UPDATE FetchedTweets SET State=? WHERE Session=? AND State=?",(twelec_globals.tweet_states['unprocessed'],session_id,twelec_globals.tweet_states['processed']))    
-        #cur.execute("DELETE FROM KeptTweets WHERE Session=?",(session_id,))
-
-    # Do scoring
-    processTweets.rescoreKeptTweets(session_id)
-    processTweets.processTweets(session_id)
 
     # and display
     return(displayTweets.displayToStr(session_id))

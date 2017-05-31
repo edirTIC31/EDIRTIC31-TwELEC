@@ -158,18 +158,18 @@ def TwELEC():
                             hours_before,
                             twelec_globals.language_string,
                             max_search_hits,
-                            twelec_globals.keep_zero_score)
+                            twelec_globals.minimum_eligible_score)
     if session_id==-1 :
         return(render_template("error.html",cause="Erreur de base de données (création de session)"))        
 
-    # Fetch the tweets using the Twitter API
-    fetchTweets.fetchTweets(twelec_globals.a_token,
+    # Fetch the tweets using the Twitter API and score them
+    fetchTweets.fetchAndProcessTweets(twelec_globals.a_token,
                             twelec_globals.a_secret,
                             twelec_globals.c_key,
                             twelec_globals.c_secret,
                             session_id)
     # Score tweets
-    processTweets.processTweets(session_id)
+    #processTweets.processTweets(session_id)
 
     # Display tweets
     return(displayTweets.displayToStr(session_id))

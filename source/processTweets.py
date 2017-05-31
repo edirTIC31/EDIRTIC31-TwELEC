@@ -100,6 +100,9 @@ def scoreTweet(tweet,session):
     malus_delta=(math.exp((delta_hours/max_hours)*malus_age_steepness)/math.exp(malus_age_steepness))*malus_max_age
     
     score=score-int(malus_delta)
+
+    if score<0:
+        score=0
     
     return(score)  
 
@@ -127,7 +130,25 @@ def rescoreKeptTweets(session_id) :
             row=cur_kt_r.fetchone()
 
 ## ** TODO ** handle error case
+def countKeptTweets(session_id, minimum_score) :
+
+    with lite.connect("twitter.db") as con:
+
+        cur_in=con.cursor()
+        # Retrieve all tweets related to that session and that are unprocessed
+        cur_in.execute("SELECT TwId FROM KeptTweets WHERE Session=? and Session>=?",(session_id,minimum_score))
+
+        con.commit()
+
+    if(cur_in.rowcount<=0):
+        return(0)
+    else:    
+        return(cur_in.rowcount)
+
+
+## ** TODO ** handle error case
 def processTweets(session_id) :
+    
     with lite.connect("twitter.db") as con:
 
         cur_in=con.cursor()

@@ -7,6 +7,7 @@ import sys
 
 import twelec_globals
 import sessions
+import processTweets
 
 #####################################################
 
@@ -38,7 +39,7 @@ def buildSince(h_bf):
 
 #####################################################
 
-def fetchTweets(a_token,
+def fetchAndProcessTweets(a_token,
                 a_secret,
                 c_key,
                 c_secret,
@@ -50,7 +51,8 @@ def fetchTweets(a_token,
 
     # Connect to the DB
     with lite.connect('twitter.db') as con:
-        cur=con.cursor()       
+        cur=con.cursor()  
+        cur_update=con.cursor()     
 
         # Retrieve session data
         session=sessions.getSessionByID(session_id)
@@ -60,11 +62,8 @@ def fetchTweets(a_token,
         banned_keywords=json.loads(session['BKeyw'])
         hours_before=session['Since']
         language_string=json.loads(session['Lang'])
-        max_search_hits=session['MaxHits']
          
-    # No search hits so far, starting from
-    # the "first" tweet
-    search_hits=0
+
     max_id_str=""
 
     # Build the query string for the twitter search API
@@ -73,7 +72,11 @@ def fetchTweets(a_token,
     
     # Start filling the DB with tweets 
     early_finish=False
-    while (search_hits < max_search_hits) and not early_finish:
+
+    # Initialise search hits to the number of Tweets that 
+    # are complying with the selection criteria so far
+    search_hits=processTweets.countKeptTweets(session_id, session['MinimumScore'])
+    while (search_hits < session['MaxHits']) and not early_finish:
 
         # Get next search results 
         # max_id is set to "" for the first iteration
@@ -89,13 +92,25 @@ def fetchTweets(a_token,
             # add each tweet to the DB
             for status in result['statuses']:
                 try:
-                    # Id the tweet already exists, this part is ignored
+
+                    # If the tweet already exists, this part is ignored
                     cur.execute("INSERT INTO FetchedTweets VALUES(?,?,?,?)",
                                 (session_id,
                                 status['id'],
                                 json.dumps(status),
-                                twelec_globals.tweet_states['unprocessed']))
-                    search_hits=search_hits+1
+                                twelec_globals.tweet_states['processed_new']))
+
+                    # Compute the score ##
+                    score=processTweets.scoreTweet(status,session)
+
+                    # If the score is above a certain threshold, update search hits
+                    if(score >= session['MinimumScore']):
+                       search_hits=search_hits+1 
+
+                    # Update kept table
+                    cur_update.execute("INSERT INTO KeptTweets VALUES (?,?,?)",(session_id,status['id'],score))
+
+                    
                 except lite.IntegrityError:
                     # This exception is triggered in case a tweet already
                     # saved in a prior instance of the session is inserted
@@ -119,4 +134,5 @@ def fetchTweets(a_token,
       
     # Gracefully the DB connection
     con.commit()
+
     

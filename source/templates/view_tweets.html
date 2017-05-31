@@ -13,35 +13,33 @@
         <H1>Résultats</H1>
      {% endif %}
       <TABLE>
-	<TR>
-	  <TD>
-	    Recherche des mots-clé
-	    <INPUT TYPE=TEXT NAME="mkw" VALUE="{{display_params['mkw_field']}}"> (obligatoires),
-	    <INPUT TYPE=TEXT NAME="okw" VALUE="{{display_params['okw_field']}}"> (optionnels) et
-	    <INPUT TYPE=TEXT NAME="bkw" VALUE="{{display_params['bkw_field']}}"> (bannis) 
-      </TD>
-    </TR>
-      <TD>
-	    Affichage des tweets à scores nuls 
-	    {% if display_params['display_zero']==1 %}
-	    <INPUT TYPE=CHECKBOX NAME="dz" CHECKED>
-	    {% else %}
-	    <INPUT TYPE=CHECKBOX NAME="dz">
-	    {% endif %}  
-
-	    <INPUT TYPE=HIDDEN NAME="session_id" VALUE="{{display_params['session_id']}}">Coup de pouce <input type="checkbox" name="cdp">
-	    <INPUT type=SUBMIT value="rafraichir">
+      <TR>
+		<TD>
+	    Tweets trouvés : {{display_params['num_fetched']}} / Tweets gardés : {{display_params['num_kept']}} / Tweets affichés : {{display_params['num_displayed']}}
 	    {% if display_params['tweets_set'] != [] %}
 	      <A HREF="/displayTweetsStats?session_id={{display_params['session_id']}}" TARGET=_new>statistiques</A>
 	    {% endif %}
-	  </TD>
+	    <BR><BR>
+		</TD>
 	</TR>
 	<TR>
-	<TD>
-	    Tweets trouvés : {{display_params['num_fetched']}} / Tweets gardés : {{display_params['num_kept']}} / Tweets affichés : {{display_params['num_displayed']}}
-	    <BR><BR>
-	</TD>
+	  <TD>
+	    <B>Mot-clés obligatoires</B> : <INPUT TYPE=TEXT NAME="mkw" VALUE="{{display_params['mkw_field']}}">
+	    <B>Mot-clés optionnels</B> :<INPUT TYPE=TEXT NAME="okw" VALUE="{{display_params['okw_field']}}"> 
+	    <B>Mot-clés bannis</B> : <INPUT TYPE=TEXT NAME="bkw" VALUE="{{display_params['bkw_field']}}"> 
+      </TD>
+    </TR>
+      <TD>
+      	<B>score minimum</B> <INPUT TYPE=TEXT NAME="minscore" MAXLENGTH=4 VALUE="{{display_params['minimum_score']}}"> 
+  	    <INPUT TYPE=HIDDEN NAME="session_id" VALUE="{{display_params['session_id']}}"><B>Suggérer des mots clés optionnels</B> <input type="checkbox" name="cdp">
+	    </TD>
 	</TR>
+	<TR ALIGN="center" BGCOLOR="green">
+		<TD>
+	    <INPUT type=SUBMIT value="rafraichir">
+	  </TD>
+	</TR>
+
       </TABLE>
       <table style="width:100%" border=1>
 	<TR>
