@@ -69,6 +69,8 @@ def displayToStr(session_id):
             
             tweet_elm={}
             tweet_elm['score']=row[1]
+
+            tweet_elm['user']=tweet['user']['name']
             if tweet['place'] != None:
                 tweet_elm['place']=tweet['place']['full_name']
                 

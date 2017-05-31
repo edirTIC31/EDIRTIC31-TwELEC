@@ -46,6 +46,7 @@
 	  <th>Score</th>
 	  <th>Lieu</th>
 	  <th>Heure et date</th>
+	  <th>User</th>
 	  <th>Text</th>
 	  <th>Image</th>
 	  <th>J'aime</th>
@@ -70,7 +71,9 @@
 	  <td>
 	    {{tweet_elm['created_at']}}
 	  </td>
-	  
+	  <td>
+	    {{tweet_elm['user']}}
+	  </td>
 	  <td>
 	    {% if tweet_elm['new'] %}
 	    <IMG SRC="{{url_for('static',filename='new_icon.png')}}" WIDTH=16>
