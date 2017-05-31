@@ -17,10 +17,15 @@ Note(2) : sous *Debian/Jessie* l'installation par *pip* de *matplotlib* est un p
 
 ## Format de distribution
 
+<<<<<<< HEAD
 Plusieurs fichiers Python à éxécuter en application web (Flask)
+=======
+Plusieurs fichiers Python à éxécuter en application web via Flask
+>>>>>>> origin/master
 
 ## Installation
 
+<<<<<<< HEAD
 
 Configurer le mot de passe de session et les droits d'accès à Twitter dans *twelec_globals.py*
 
@@ -81,6 +86,46 @@ La page des résultats est structurée comme suit :
 Tous les autres tweets qui ne sont ni bannis, ni aimés sont conservés tels quels. 
 
 Enfin, on peut à la fois aimer et bannir ... mais dans ce cas, il ne se passe rien !
+=======
+Configurer le mot de passe de session et les droits d'accès à Twitter dans *twelec_globals.py*
+
+      # Session password
+      s_password="password"
+
+      # Keys to access the twitter API
+      c_key = ''
+      c_secret = ''
+      a_token = ''
+      a_secret = ''
+    
+    
+Eventuellement, ajuster les autres paramètres dans *twelec_globals.py*
+
+      # Define the number of search hits to aim to
+      global_hits=80
+
+      # Define the number of search hits to ask per API call
+      hits_page_size=20
+
+      # Language option for Twitter search
+      language_string="fr"
+
+      # How often should we see a keyword
+      # from the fav list to promote it as mandatory keywords
+      faved_frequency_threshold=3
+
+      # How often should we see a keyword
+      # from the tweet list to promote it as mandatory keywords hint it
+      hint_frequency_threshold=2
+
+      # Minimum score expected from a tweet
+      minimum_eligible_score=10
+
+      # List of stop words
+      stop_words=["-elle",
+
+Avant tout usage, il faut initialiser la base de données en invoquant l'URL '.../createDB'
+>>>>>>> origin/master
 
 *Suggérer des mots clés optionnels* : à partir de tous tweets affichés, coup de pouce va suggérer des mots clés qu'il rajoutera aux mots clés optionnels. 
 
