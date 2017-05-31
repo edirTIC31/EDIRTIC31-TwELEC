@@ -6,7 +6,6 @@ TwELEC est un outil (actuellement un prototype) de recherche de fils twitter par
 Le principe est simple : on fourni des mots clés (ex: "Bordeaux" et "inondation") et TwELEC fait une recherche des tweets
 contenant ces termes. Ensuite, il va appliquer un algorithme de scoring (cf [l'explication](./source/scoring.md) dans le répertoire source) pour classer les tweets par ordre d'importance. Et enfin, il affiche le résultat.
 
-Note : cette branche de TwELEC est en cours de développement. Si vous cherchez une version stable --> branche *master*
 
 ## Pré-requis
 
@@ -18,6 +17,12 @@ Note(2) : sous *Debian/Jessie* l'installation par *pip* de *matplotlib* est un p
 ## Format de distribution
 
 Plusieurs fichiers Python à éxécuter en application web (Flask)
+
+## Documentation
+
+A part ce fichier, il y a deux autres documents : 
+  * [Explication du scoring](./source/scoring.md)
+  * [Explication de la structure de la DB](./source/db.md)
 
 
 ## Installation
@@ -70,9 +75,10 @@ La page des résultats est structurée comme suit :
     1. Le score du Tweet. TwELEC calcule un 'score' pour chaque tweet. Les tweets avec les score les plus élevés sont affichés en premier lieu. Le calcul du score est calculé en fonction de plusieurs paramètres (présence d'une image, présence des mots clés optionnels, ...)
     2. L'endroit d'où le tweet a été envoyé (si l'utilisateur le précise). Si c'est le cas, un lien vers *Google Maps* est fourni
     3. L'heure d'envoi du tweet (au format international)
-    4. Le texte du tweet avec un lien vers le tweet original et une icone *new* si ce tweet apparaît pour la première fois dans la liste des résultats
-    5. L'image (ou les images) incluses dans le tweet
-    6. Un bouton *j'aime* et un bouton *bannir* (voir ci-dessous)
+    4. L'utilisateur auteur du tweet (du moins son nickname) 
+    5. Le texte du tweet avec un lien vers le tweet original et une icone *new* si ce tweet apparaît pour la première fois dans la liste des résultats
+    6. L'image (ou les images) incluses dans le tweet
+    7. Un bouton *j'aime* et un bouton *bannir* (voir ci-dessous)
 
 *Bannir un tweet* : celui-ci disparaît de la liste (et dans une même session, il ne va plus réapparaître).
 
@@ -85,6 +91,9 @@ Enfin, on peut à la fois aimer et bannir ... mais dans ce cas, il ne se passe r
 *Suggérer des mots clés optionnels* : à partir de tous tweets affichés, coup de pouce va suggérer des mots clés qu'il rajoutera aux mots clés optionnels. 
 
 
+## Troubleshooting
+
+L'affichage des statistiques peut être capricieux, surtout s'il n'y a pas de concordance entre (a) l'endroit où sont stockés les fichiers PNG créés (cf. /displayTweetStats.py/) et le code HTML les affichant cf. (/templates//view_tweet_stats.html/).
 
 ## Les évolutions prévues du code 
 
