@@ -11,10 +11,13 @@ c_secret = ''
 a_token = ''
 a_secret = ''
 
-# Define the number of search hits to ask per API call
+# Define the number of search hits to aim to
 global_hits=80
+
+# Define the number of search hits to ask per API call
 hits_page_size=20
 
+# Language option for Twitter search
 language_string="fr"
 
 # How often should we see a keyword
