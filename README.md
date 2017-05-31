@@ -55,8 +55,8 @@ Un URL supplémentaire */sessions* est disponible pour visualiser les tweets ré
 ### Démarrage d'une session
 
 La page de démarrage demande de founir :
-  * Un mot de passe ... (/no comment/)
-  * Des mots clés obligatoires (séparés par des espaces). Ils seront utilisés pour rechercher des Tweets. **Attention** : lorsque Twitter ne trouve pas beaucoup de tweets liés à ces mots clés, il n'honore pas toulours complètement la liste. Ce champ ne peut être laissé vide
+  * Un mot de passe ... (*no comment*)
+ *)* Des mots clés obligatoires (séparés par des espaces). Ils seront utilisés pour rechercher des Tweets. **Attention** : lorsque Twitter ne trouve pas beaucoup de tweets liés à ces mots clés, il n'honore pas toulours complètement la liste. Ce champ ne peut être laissé vide
   * Des mots clés optionnels : ils sont ... optionnels 
   * Des mots clés à bannir : les tweets contenant ces mots clés auront un score forcé à 0
   * Le nombre d'heures à remonter dans le passé : Twitter limite cette capacité à environ 1 semaines (168 heures). Ceci étant, en mettant '-1', vous demandez à Twitter d'aller aussi loin que possible dans le passé. Une remarque en passant : quand on utilise la fonction *search* de l'application officielle Twitter, il n'y a pas cette limite.
@@ -93,7 +93,7 @@ Enfin, on peut à la fois aimer et bannir ... mais dans ce cas, il ne se passe r
 
 ## Troubleshooting
 
-L'affichage des statistiques peut être capricieux, surtout s'il n'y a pas de concordance entre (a) l'endroit où sont stockés les fichiers PNG créés (cf. /displayTweetStats.py/) et le code HTML les affichant cf. (/templates//view_tweet_stats.html/).
+L'affichage des statistiques peut être capricieux, surtout s'il n'y a pas de concordance entre (a) l'endroit où sont stockés les fichiers PNG créés (cf. *displayTweetStats.py*) et le code HTML les affichant cf. (*templates/view_tweet_stats.html*).
 
 ## Les évolutions prévues du code 
 
