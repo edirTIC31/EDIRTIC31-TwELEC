@@ -12,56 +12,11 @@ Python 3.x avec les modules *Twitter*, *Flask* et *pytz*, les autres modules son
 
 ## Format de distribution
 
-Plusieurs fichiers Python à éxécuter soit en ligne de commande soit 
-en application web
+Plusieurs fichiers Python à éxécuter en application web via Flask
 
 ## Mode d'emploi
 
-### Pour la ligne de commande
-
-Configurer les paramètres de recherche dans *main.py* ainsi que les 
-droits d'accès pour l'API Twitter
-
-      session_name="test session"
-
-      # Mandatory keywords
-      mandatory_keywords=["inondation","bordeaux"]
-
-      # Optional keywords
-      optional_keywords=[]
-
-      # Number of hours to look up before now (< 168h)
-      hours_before=72
-
-      # Language to look for in the tweets
-      language_string="fr"
-
-      # Number of hits per request
-      hits_page_size=8
-
-      # Maximum number of search hits
-      # may be more depending on
-      # next multiple of hits_page_size
-      max_search_hits=35
-
-      # Keys to access the twitter API (see http://apps.twitter.com)
-      c_key = ''
-      c_secret = ''
-      a_token = ''
-      a_secret = ''
-
-
-  
-Construire une page HTML avec les résultats
-    <code>python3 main.py > page.html</code>
-    
-*createDB.py* permet de re-créer la DB from scratch et *cleanKept.py*
-permet de ré-itérer la phase *processTweets.py* sans perdre les résultats
-bruts de la recherche
-
-### Pour l'appli web
-
-Configurer le mot de passe de session et les droits d'accès à Twitter dans *mainWeb.py*
+Configurer le mot de passe de session et les droits d'accès à Twitter dans *twelec_globals.py*
 
       # Session password
       s_password="password"
@@ -72,6 +27,33 @@ Configurer le mot de passe de session et les droits d'accès à Twitter dans *ma
       a_token = ''
       a_secret = ''
     
+    
+Eventuellement, ajuster les autres paramètres dans *twelec_globals.py*
+
+      # Define the number of search hits to aim to
+      global_hits=80
+
+      # Define the number of search hits to ask per API call
+      hits_page_size=20
+
+      # Language option for Twitter search
+      language_string="fr"
+
+      # How often should we see a keyword
+      # from the fav list to promote it as mandatory keywords
+      faved_frequency_threshold=3
+
+      # How often should we see a keyword
+      # from the tweet list to promote it as mandatory keywords hint it
+      hint_frequency_threshold=2
+
+      # Minimum score expected from a tweet
+      minimum_eligible_score=10
+
+      # List of stop words
+      stop_words=["-elle",
+
+Avant tout usage, il faut initialiser la base de données en invoquant l'URL '.../createDB'
 
 Pour tester en local : <code>python3 mainWeb.py</code> en utilisant le serveur web intégré de Flask
 L'URL '/' est routée sur la page d'entrée.
